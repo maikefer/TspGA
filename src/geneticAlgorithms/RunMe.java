@@ -7,12 +7,8 @@ public class RunMe {
 		
 		// a city will be represented by a number
 		
-		Individual indiv;
-		
-		for (int i = 0; i < 100; i++){
-			indiv = new Individual(9);
-			System.out.println(i + ": " + indiv.toString());
-		}
+		Population pop = new Population(100, 10);
+		System.out.println(pop.toString());
 
 	}
 
