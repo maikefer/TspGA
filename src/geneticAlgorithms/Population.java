@@ -9,22 +9,23 @@ public class Population {
 	/**
 	 * The representation of the individuals
 	 */
-	private Individual[] individuals;
+	protected Individual[] individuals;
+	
 	/**
-	 * cizySize describes how many cities are accused by the TSB
+	 * cizySize is the amount of cities that are accused by the TSB
 	 */
 	private int citySize;
 	
-	public Population(int size, int citySize){
+	public Population(int size,TravelingSalesmanProblem tsp){
 		this.size = size;
-		this.citySize = citySize;
+		this.citySize = tsp.getDimension();
 		this.individuals = new Individual[size];
-		initializeIndividualsRandomly();
+		initializeIndividualsRandomly(tsp);
 	}
 	
-	public void initializeIndividualsRandomly(){
+	public void initializeIndividualsRandomly(TravelingSalesmanProblem tsp){
 		for (int i = 0; i < size; i++) {
-			individuals[i] = new Individual(citySize);
+			individuals[i] = new Individual(tsp);
 		}
 	}
 	
@@ -43,5 +44,9 @@ public class Population {
 	
 	public void reproduce(){
 		
+	}
+	
+	public int getSize(){
+		return size;
 	}
 }
