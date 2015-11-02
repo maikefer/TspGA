@@ -63,9 +63,9 @@ public class Population {
 		// elitism
 		Individual elite[] = grabElite();
 		
-		Population childrenPop = new Population(this.citySize, tsp, crossoverRate,
+		Population childrenPop = new Population(size, tsp, crossoverRate,
 														mutationRate, elitismRate);
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < elite.length; i++) {
 			childrenPop.individuals[i] = elite[i];
 		}
 		
@@ -121,6 +121,9 @@ public class Population {
 	 * @return
 	 */
 	public Individual getIndividual(int n) {
+		if (n > 49) {
+			System.out.println("ala");
+		}
 		return individuals[n];
 	}
 
@@ -134,15 +137,15 @@ public class Population {
 
 		Individual tournament[] = new Individual[tournamentNumber];
 
-		for (int i = 0; i < tournamentNumber + 1; i++) {
-			// a number between 0 and citySize-1, if citysize is smaller than
+		for (int i = 0; i < tournamentNumber; i++) {
+			// a number between 0 and size-1 if size is smaller than
 			// 100
-			int k = (int) (Math.random() * 100.0) % citySize;
+			int k = (int) (Math.random() * 100.0) % size;
 			tournament[i] = this.getIndividual(k);
 		}
 
 		Individual winner = tournament[0];
-		for (int i = 1; i < tournamentNumber + 1; i++) {
+		for (int i = 1; i < tournamentNumber; i++) {
 			if (tournament[i].getFitness() < winner.getFitness()) {
 				winner = tournament[i];
 			}
@@ -154,16 +157,16 @@ public class Population {
 	private boolean crossoverOk() {
 
 		// random number
-		int k = (int) (Math.random() * 100.0) % citySize;
+		int k = (int) (Math.random() * 100.0) % size;
 
 		while (crossoverRateArray[k]) {
-			k = (int) (Math.random() * 100.0) % citySize;
+			k = (int) (Math.random() * 100.0) % size;
 		}
 
 		crossoverRateArray[k] = true;
 
 		// number to be true
-		int numTrue = (int) crossoverRate * citySize;
+		int numTrue = (int) crossoverRate * size;
 
 		if (k <= numTrue) {
 			return true;
@@ -174,16 +177,16 @@ public class Population {
 
 	private boolean mutationOk() {
 		// random number
-		int k = (int) (Math.random() * 100.0) % citySize;
+		int k = (int) (Math.random() * 100.0) % size;
 
 		while (mutationRateArray[k]) {
-			k = (int) (Math.random() * 100.0) % citySize;
+			k = (int) (Math.random() * 100.0) % size;
 		}
 
 		mutationRateArray[k] = true;
 
 		// number to be true
-		int numTrue = (int) mutationRate * citySize;
+		int numTrue = (int) mutationRate * size;
 
 		if (k <= numTrue) {
 			return true;

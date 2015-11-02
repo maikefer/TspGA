@@ -15,6 +15,7 @@ public class RunMe {
 		
 		TravelingSalesmanProblem tsp = new TspBerlin(popSize, genSize, crossoverRate, mutationRate, 
 															elitismRate);
+		tsp.findSolution();
 //		TravelingSalesmanProblem tsp2 = new EasyTsp(7, popSize, genSize);
 		
 	}

@@ -51,13 +51,17 @@ public abstract class TravelingSalesmanProblem {
 	 * Finds a solution with a genetic algorithm 
 	 */
 	public void findSolution() {
+		
+		// initialize solution 
+		solution = initializeSolution();
+		
 		int generationCounter = 0;
 		
 		while (generationCounter < genSize + 1) {
 			parentPop = parentPop.reproduce(this);
 			
 			// save best child as solution
-			for (int i = 0; i < dimension; i++) {
+			for (int i = 0; i < parentPop.getSize(); i++) {
 				if (parentPop.getIndividual(i).getFitness() < solution.getFitness()){
 					solution = parentPop.getIndividual(i);
 				}
@@ -72,6 +76,18 @@ public abstract class TravelingSalesmanProblem {
 	
 	public int getDimension(){
 		return dimension;
+	}
+	
+	public Individual initializeSolution(){
+		solution = parentPop.getIndividual(0);
+		
+		for (int i = 1; i < parentPop.getSize(); i++) {
+			if (parentPop.getIndividual(i).getFitness() < solution.getFitness()){
+				solution = parentPop.getIndividual(i);
+			}
+		}
+		
+		return solution;
 	}
 
 }
