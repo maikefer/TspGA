@@ -54,19 +54,20 @@ public abstract class TravelingSalesmanProblem {
 		
 		// initialize solution 
 		solution = initializeSolution();
-		
+	
 		int generationCounter = 0;
 		
 		while (generationCounter < genSize + 1) {
 			parentPop = parentPop.reproduce(this);
-			
 			// save best child as solution
 			for (int i = 0; i < parentPop.getSize(); i++) {
 				if (parentPop.getIndividual(i).getFitness() < solution.getFitness()){
 					solution = parentPop.getIndividual(i);
 				}
 			}
-			genSize++;
+			System.out.println("fitness of current best solution: " + solution.getFitness());
+			
+			generationCounter++;
 		}
 	}
 	
