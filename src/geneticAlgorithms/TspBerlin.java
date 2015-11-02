@@ -2,8 +2,8 @@ package geneticAlgorithms;
 
 public class TspBerlin extends TravelingSalesmanProblem {
 
-	public TspBerlin(int popSize, int genSize){
-		super(52, popSize, genSize);
+	public TspBerlin(int popSize, int genSize, float crossoverRate, float mutationRate, float elitismRate){
+		super(52, popSize, genSize, crossoverRate, mutationRate, elitismRate);
 		initialize();
 	}
 	

@@ -8,11 +8,12 @@ public abstract class TravelingSalesmanProblem {
 	protected Population parentPop;
 	protected int genSize;
 	
-	public TravelingSalesmanProblem(int dimension, int popSize, int genSize){
+	public TravelingSalesmanProblem(int dimension, int popSize, int genSize, float crossoverRate, 
+			float mutationRate, float elitisimRate){
 		this.dimension = dimension;
 		this.nodes = new int[dimension][2];
 		this.genSize = genSize;
-		this.parentPop = new Population(popSize, this);
+		this.parentPop = new Population(popSize, this, crossoverRate, mutationRate, elitisimRate);
 		parentPop.initializeIndividualsRandomly(this);
 	}
 	

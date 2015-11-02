@@ -1,9 +1,9 @@
 package geneticAlgorithms;
 
-import java.math.*;
+//import java.math.*;
 import java.util.Random;
 
-public class Individual {
+public class Individual implements Comparable<Individual> {
 
 	private int[] cities;
 	// private int length;
@@ -77,8 +77,24 @@ public class Individual {
 
 	}
 
-	public void mutate() {
+	/**
+	 * This is a mutation method.
+	 * It swaps two numbers at random unique positions of the cities-array. 
+	 */
+	public void mutateReciprocalExchange() {
 
+		// take two random numbers within the array, that are not the same
+		int k = (int) (Math.random() * 100.0) % cities.length;
+		int j = (int) (Math.random() * 100.0) % cities.length;
+		
+		while (j == k) {
+			j = (int) (Math.random() * 100.0) % cities.length;
+		}
+		
+		// swap the cities located at the randomly generated positions
+		int save = cities[k];
+		cities[k] = cities[j];
+		cities[j] = save;
 	}
 
 	@Override
@@ -113,42 +129,7 @@ public class Individual {
 		return true;	
 	}
 	
-	/**
-	 * crossover algo with uniform cross over
-	 * @param parent
-	 * @return
-	 */
-	public Individual[] getChildrenUOX (Individual parent) {
-		int mask[] = getRandomMask();
-		Individual children[] = new Individual[2];
-	
-		children[0] = getChild(0, mask, parent);
-		children[1] = parent.getChild(1, mask, this);
-		
-		return children;
-	}
-	
-	private int[] getRandomMask(){
-		int mask[] = new int[cities.length];
-		
-		for (int i = 0; i < cities.length; i++){
-			double j = Math.random();
-			if (j < 0.5) {
-				mask[i] = 0;
-			} else {
-				mask[i] = 1;
-			}
-			System.out.print(mask[i] + " ");
-		}
-		
-		System.out.println("mask");
-		
-		
-		
-		return mask;
-	}
-	
-	private Individual getChild(int n, int mask[], Individual parent){
+	public Individual getChild(int n, int mask[], Individual parent){
 		Individual children = new Individual(tsp); // will get randomly initialized, but doesn't matter
 		children.initializeWithMinus1();
 		
@@ -163,8 +144,7 @@ public class Individual {
 				// get missing numbers in order of second parent
 				// can make faster by remembering the last j 
 						// (don't have to start looking from the beginning)
-				
-				// TODO läuft von hinten durch?
+			
 				for (int j = 0; j < cities.length; j++) {
 					if (!children.contains(parent.cities[j])){
 						children.cities[i] = parent.cities[j];
@@ -190,6 +170,28 @@ public class Individual {
 	private void initializeWithMinus1 () {
 		for (int i = 0; i < cities.length; i++) {
 			cities[i] = -1;
+		}
+	}
+
+	@Override
+	public int compareTo(Individual arg0) {
+		/*
+		 * returns:
+		 * neg int - arg0 < arg1
+		 * 0 - arg0 = arg1
+		 * pos int - arg0 > arg1
+		 */
+	
+		
+		int fitness0 = this.getFitness();
+		int fitness1 = arg0.getFitness();
+		
+		if (fitness0 < fitness1){
+			return -1;
+		} else if (fitness0 == fitness1) {
+			return 0;
+		} else {
+			return 1;
 		}
 	}
 }

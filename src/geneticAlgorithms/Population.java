@@ -1,5 +1,9 @@
 package geneticAlgorithms;
 
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 public class Population {
 
 	/**
@@ -15,18 +19,29 @@ public class Population {
 	 * cizySize is the amount of cities that are accused by the TSB
 	 */
 	private int citySize;
-	
+
 	/**
-	 * The amount of Individuals that will be compared in the tournament selection
+	 * The amount of Individuals that will be compared in the tournament
+	 * selection
 	 */
 	private final int tournamentNumber = 4;
-	private final float crossoverRate = 1.0F;
-	private final float mutationRate = 0.1F;
+	private float crossoverRate;
+	private float mutationRate;
+	private boolean crossoverRateArray[];
+	private boolean mutationRateArray[];
+	private float elitismRate;
+	
 
-	public Population(int size, TravelingSalesmanProblem tsp) {
+	public Population(int size, TravelingSalesmanProblem tsp, float crossoverRate, 
+							float mutationRate, float elitismRate) {
 		this.size = size;
 		this.citySize = tsp.getDimension();
 		this.individuals = new Individual[size];
+		this.mutationRate = mutationRate;
+		this.crossoverRate = crossoverRate;
+		this.crossoverRateArray = new boolean[size];
+		this.mutationRateArray = new boolean[size];
+		this.elitismRate = elitismRate;
 	}
 
 	public void initializeIndividualsRandomly(TravelingSalesmanProblem tsp) {
@@ -44,37 +59,55 @@ public class Population {
 		return sb.toString();
 	}
 
-	public void doCrossover() {
-
-	}
-
 	public Population reproduce(TravelingSalesmanProblem tsp) {
-
-		Population children = new Population(this.citySize, tsp);
-		int childrenCount = 0;
 		// elitism
-
-		Individual parent1, parent2;
+		Individual elite[] = grabElite();
 		
+		Population childrenPop = new Population(this.citySize, tsp, crossoverRate,
+														mutationRate, elitismRate);
+		for (int i = 0; i < size; i++) {
+			childrenPop.individuals[i] = elite[i];
+		}
+		
+		Individual children[] = new Individual[2];
+		int childrenCount = elite.length;
+		Individual parent1, parent2;
+
 		while (childrenCount < this.size) {
 			// grab 2 parents
-			
 			parent1 = selectTournament();
 			parent2 = selectTournament();
-			
-			// think of crossover rate
-			
+
 			// get 2 children due to crossover
-			Individual childrens[] = parent1.getChildrenUOX(parent2);
-			
+			int mask[] = getRandomMask();
 
+			// think of crossover rate
+			if (crossoverOk()) {
+				children[0] = parent1.getChild(0, mask, parent2);
+			}
+
+			if (crossoverOk()) {
+				children[1] = parent2.getChild(1, mask, parent1);
+			}
+
+			// mutate children
 			// think of mutation rate
-			// mutate both children
+			if (mutationOk()) {
+				children[0].mutateReciprocalExchange();
+			}
+			if (mutationOk()) {
+				children[1].mutateReciprocalExchange();
+			}
+			
+			// put children into childrenPop
+			childrenPop.individuals[childrenCount++] = children[0];
 
-			// put children into childpop
-
+			// what if childpop.size is odd? Check that! array overflow!
+			if (childrenCount < this.size) {
+				childrenPop.individuals[childrenCount++] = children[1];
+			}
 		}
-		return children;
+		return childrenPop;
 	}
 
 	public int getSize() {
@@ -83,6 +116,7 @@ public class Population {
 
 	/**
 	 * Gets the individual at position n in individuals[]
+	 * 
 	 * @param n
 	 * @return
 	 */
@@ -91,27 +125,110 @@ public class Population {
 	}
 
 	/**
-	 * Selects a number of random individuals of the population and returns the individual
-	 *  with the best fitness.
+	 * Selects a number of random individuals of the population and returns the
+	 * individual with the best fitness.
 	 * 
 	 * @return the individual with the best fitness
 	 */
-	public Individual selectTournament(){
-		
+	public Individual selectTournament() {
+
 		Individual tournament[] = new Individual[tournamentNumber];
-		
+
 		for (int i = 0; i < tournamentNumber + 1; i++) {
-			int k = (int) (Math.random() * 100.0) % citySize; // a number between 0 and citySize-1
+			// a number between 0 and citySize-1, if citysize is smaller than
+			// 100
+			int k = (int) (Math.random() * 100.0) % citySize;
 			tournament[i] = this.getIndividual(k);
 		}
-		
+
 		Individual winner = tournament[0];
-		for (int i = 1; i < tournamentNumber + 1; i++){
-			if (tournament[i].getFitness() < winner.getFitness()){
+		for (int i = 1; i < tournamentNumber + 1; i++) {
+			if (tournament[i].getFitness() < winner.getFitness()) {
 				winner = tournament[i];
 			}
 		}
-		
+
 		return winner;
 	}
+
+	private boolean crossoverOk() {
+
+		// random number
+		int k = (int) (Math.random() * 100.0) % citySize;
+
+		while (crossoverRateArray[k]) {
+			k = (int) (Math.random() * 100.0) % citySize;
+		}
+
+		crossoverRateArray[k] = true;
+
+		// number to be true
+		int numTrue = (int) crossoverRate * citySize;
+
+		if (k <= numTrue) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean mutationOk() {
+		// random number
+		int k = (int) (Math.random() * 100.0) % citySize;
+
+		while (mutationRateArray[k]) {
+			k = (int) (Math.random() * 100.0) % citySize;
+		}
+
+		mutationRateArray[k] = true;
+
+		// number to be true
+		int numTrue = (int) mutationRate * citySize;
+
+		if (k <= numTrue) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private int[] getRandomMask() {
+		int mask[] = new int[citySize];
+
+		for (int i = 0; i < citySize; i++) {
+			double j = Math.random();
+			if (j < 0.5) {
+				mask[i] = 0;
+			} else {
+				mask[i] = 1;
+			}
+			// System.out.print(mask[i] + " ");
+		}
+
+		return mask;
+	}
+	
+	private Individual[] grabElite() {
+		
+		// how many "best" chromosomes are going to be picked
+		int amount = (int) elitismRate * size;
+		
+		// ascendingly ordered --> grab the first amount
+		TreeSet<Individual> map = new TreeSet<Individual>();
+		
+		// order Individuals from population in a TreeSet according to their fitness
+		for (int i = 0; i < size; i++) {
+			map.add(individuals[i]);
+		}
+		
+		// grab the first amount of Individuals of TreeSet
+		Individual elite[] = new Individual[amount];
+		
+		for (int i = 0; i < amount; i++){
+			elite[i] = map.pollFirst();
+		}
+		
+		return elite;
+	}
+
 }
