@@ -4,19 +4,22 @@ public abstract class TravelingSalesmanProblem {
 	
 	protected int nodes[][];
 	protected int dimension;
-	protected int solution[];
-	protected Population population;
+	protected Individual solution;
+	protected Population parentPop;
+	protected int genSize;
 	
-	public TravelingSalesmanProblem(int dimension, int popSize){
+	public TravelingSalesmanProblem(int dimension, int popSize, int genSize){
 		this.dimension = dimension;
 		this.nodes = new int[dimension][2];
-		this.population = new Population(popSize, this);
+		this.genSize = genSize;
+		this.parentPop = new Population(popSize, this);
+		parentPop.initializeIndividualsRandomly(this);
 	}
 	
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("Dimension: " + dimension);
-		sb.append("\nPopulationSize: " + population.getSize());
+		sb.append("\nPopulationSize: " + parentPop.getSize());
 		sb.append("\nNodes:");
 		
 		for (int i = 0; i < dimension; i++){
@@ -43,8 +46,27 @@ public abstract class TravelingSalesmanProblem {
 		return nodes[node][1];
 	}
 	
+	/**
+	 * Finds a solution with a genetic algorithm 
+	 */
 	public void findSolution() {
+		int generationCounter = 0;
 		
+		while (generationCounter < genSize + 1) {
+			parentPop = parentPop.reproduce(this);
+			
+			// save best child as solution
+			for (int i = 0; i < dimension; i++) {
+				if (parentPop.getIndividual(i).getFitness() < solution.getFitness()){
+					solution = parentPop.getIndividual(i);
+				}
+			}
+			genSize++;
+		}
+	}
+	
+	public Population generateOffspring(){
+		return null;
 	}
 	
 	public int getDimension(){

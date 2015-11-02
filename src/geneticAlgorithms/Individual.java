@@ -89,7 +89,7 @@ public class Individual {
 			sb.append(cities[i] + " ");
 		}
 		
-		sb.append("\nlenght: " + cities.length );
+//		sb.append("\nlenght: " + cities.length );
 		
 		return sb.toString();
 
@@ -113,4 +113,85 @@ public class Individual {
 		return true;	
 	}
 	
+	/**
+	 * crossover algo with uniform cross over
+	 * @param parent
+	 * @return
+	 */
+	public Individual[] getChildrenUOX (Individual parent) {
+		int mask[] = getRandomMask();
+		Individual children[] = new Individual[2];
+	
+		children[0] = getChild(0, mask, parent);
+		children[1] = parent.getChild(1, mask, this);
+		
+		return children;
+	}
+	
+	private int[] getRandomMask(){
+		int mask[] = new int[cities.length];
+		
+		for (int i = 0; i < cities.length; i++){
+			double j = Math.random();
+			if (j < 0.5) {
+				mask[i] = 0;
+			} else {
+				mask[i] = 1;
+			}
+			System.out.print(mask[i] + " ");
+		}
+		
+		System.out.println("mask");
+		
+		
+		
+		return mask;
+	}
+	
+	private Individual getChild(int n, int mask[], Individual parent){
+		Individual children = new Individual(tsp); // will get randomly initialized, but doesn't matter
+		children.initializeWithMinus1();
+		
+		for (int i = 0; i < cities.length; i++) {
+			if (mask[i] == 1) {
+				children.cities[i] = this.cities[i];
+			}
+		}
+		
+		for (int i = 0; i < cities.length; i++) {
+			if (mask[i] == 0) {
+				// get missing numbers in order of second parent
+				// can make faster by remembering the last j 
+						// (don't have to start looking from the beginning)
+				
+				// TODO läuft von hinten durch?
+				for (int j = 0; j < cities.length; j++) {
+					if (!children.contains(parent.cities[j])){
+						children.cities[i] = parent.cities[j];
+						break;
+					}
+				}
+			}
+		}
+		
+		return children;
+	}
+	
+	
+	private boolean contains(int n){
+		for (int i = 0; i < cities.length; i++) {
+			if (cities[i] == n) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void initializeWithMinus1 () {
+		for (int i = 0; i < cities.length; i++) {
+			cities[i] = -1;
+		}
+	}
 }
+
+
