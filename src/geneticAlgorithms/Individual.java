@@ -1,23 +1,40 @@
 package geneticAlgorithms;
 
-//import java.math.*;
 import java.util.Random;
 
+/**
+ * This class represents an individual. An individual is a solution for the TravelingSalesmanProblem. 
+ * <br/> <br/>
+ * An individual contains a representation of the order of cities, as well as the specific tsp that 
+ * it provides a solution for. 
+ * @author Maike Rees
+ *
+ */
 public class Individual implements Comparable<Individual> {
 
+	/**
+	 * The representation of the order of the cities
+	 */
 	private int[] cities;
-	// private int length;
+
+	/**
+	 * The specific TravelingSalesmanProblem
+	 */
 	private TravelingSalesmanProblem tsp;
 
+	/**
+	 * The Constructor <br/>
+	 * The representation of the cities will be initialized randomly. 
+	 * @param tsp The specific tsp for which this Individual represents a solution
+	 */
 	public Individual(TravelingSalesmanProblem tsp) {
-		// this.length = citySize;
 		this.cities = new int[tsp.getDimension()];
 		this.tsp = tsp;
 		this.initializeRandomly();
 	}
 
 	/**
-	 * The Fitness is the total distance traveled in this individual. We assume
+	 * The Fitness is the total (fast) distance traveled in this individual. We assume
 	 * that every city is only one time inside the cities array
 	 * 
 	 * @return the fitness value (the smaller the better)
@@ -37,6 +54,12 @@ public class Individual implements Comparable<Individual> {
 //		return fitness;
 	}
 	
+	/**
+	 * The Fitness is the total (slow) distance traveled in this individual. We assume
+	 * that every city is only one time inside the cities array.
+	 * 
+	 * @return the fitness value (the smaller the better)
+	 */
 	public double getRealFitness() {
 		double fitness = 0;
 		
@@ -47,8 +70,6 @@ public class Individual implements Comparable<Individual> {
 		
 		fitness += Math.sqrt(calculateDistance(tsp.getX(cities.length - 1), tsp.getX(0), 
 						tsp.getY(cities.length - 1), tsp.getY(0)));
-		
-
 		return fitness;
 	}
 
@@ -70,6 +91,10 @@ public class Individual implements Comparable<Individual> {
 		return (((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
 	}
 
+	/**
+	 * Initialize the city-representation with a random order. <br/> 
+	 * But every city is only once represented.
+	 */
 	public void initializeRandomly() {
 		int city = 0;
 		Random generator = new Random();
@@ -79,7 +104,6 @@ public class Individual implements Comparable<Individual> {
 			loop = true;
 
 			while (loop) {
-
 				city = Math.abs(generator.nextInt() % (cities.length));
 
 				// '\u0000' is the default value for chars --> char hasn't been 
@@ -87,11 +111,9 @@ public class Individual implements Comparable<Individual> {
 				if (cities[city] == '\u0000') { 
 					cities[city] = i;
 					loop = false;
-				}
-				
+				}	
 			}
 		}
-
 	}
 
 	/**
@@ -146,7 +168,15 @@ public class Individual implements Comparable<Individual> {
 		return true;	
 	}
 	
-	public Individual getChild(int n, int mask[], Individual parent){
+	/**
+	 * Gets a child using the uniform order crossover algorithm. <br/>
+	 * Parent1 is the current Individual.
+	 * 
+	 * @param mask The generated Bit-mask.
+	 * @param parent The second parent.
+	 * @return The generated Child-Individual.
+	 */
+	public Individual getChild(int mask[], Individual parent){
 		Individual children = new Individual(tsp); // will get randomly initialized, but doesn't matter
 		children.initializeWithMinus1();
 		
@@ -159,7 +189,7 @@ public class Individual implements Comparable<Individual> {
 		for (int i = 0; i < cities.length; i++) {
 			if (mask[i] == 0) {
 				// get missing numbers in order of second parent
-				// can make faster by remembering the last j 
+				// TODO can make faster by remembering the last j 
 						// (don't have to start looking from the beginning)
 			
 				for (int j = 0; j < cities.length; j++) {
@@ -174,7 +204,12 @@ public class Individual implements Comparable<Individual> {
 		return children;
 	}
 	
-	
+	/**
+	 * Checks if the city represented by n is already contained 
+	 * 		in the current Individual's city-representation 
+	 * @param n The city represented by n
+	 * @return if the city represented by n is already contained in the Individual's city representation
+	 */
 	private boolean contains(int n){
 		for (int i = 0; i < cities.length; i++) {
 			if (cities[i] == n) {
@@ -184,6 +219,9 @@ public class Individual implements Comparable<Individual> {
 		return false;
 	}
 
+	/**
+	 * Initialize a city-representation with only -1.
+	 */
 	private void initializeWithMinus1 () {
 		for (int i = 0; i < cities.length; i++) {
 			cities[i] = -1;

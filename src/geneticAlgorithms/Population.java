@@ -1,15 +1,20 @@
 package geneticAlgorithms;
 
-import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
+/**
+ * This class represents a population with a certain amount of individuals.
+ * 
+ * @author Maike Rees
+ *
+ */
 public class Population {
 
 	/**
 	 * size describes how many individuals there are in one population
 	 */
 	private int size;
+	
 	/**
 	 * The representation of the individuals
 	 */
@@ -25,12 +30,35 @@ public class Population {
 	 * selection
 	 */
 	private final int tournamentNumber = 4;
+	
+	/**
+	 * The crossoverRate describes how many of the Individuals in the population are allowed to reproduce.
+	 * It should be between 0.0 and 1.0 since it represents a %-number.
+	 */
 	private float crossoverRate;
+	
+	/**
+	 * The mutationRate describes how many of the Individuals in the population are allowed to mutate.
+	 * It should be between 0.0 and 1.0 since it represents a %-number.
+	 */
 	private float mutationRate;
-	private boolean crossoverRateArray[];
-	private boolean mutationRateArray[];
+//	private boolean crossoverRateArray[];
+//	private boolean mutationRateArray[];
+	
+	/**
+	 * The elitismRate describes how many Elite-Individuals are chosen from the population 
+	 * 				and put (without crossover and mutation) into the next generation.
+	 */
 	private float elitismRate;
 
+	/**
+	 * The Constructor.
+	 * @param size How many Individuals are contained in the Population.
+	 * @param tsp The TravelingSalesmanProblem that should be solved.
+	 * @param crossoverRate How many Individuals are allowed to reproduce them selves.
+	 * @param mutationRate How many Individuals will be mutated.
+	 * @param elitismRate How many of the best Individuals will be taken straight to the next generation.
+	 */
 	public Population(int size, TravelingSalesmanProblem tsp, float crossoverRate, float mutationRate,
 			float elitismRate) {
 		this.size = size;
@@ -38,11 +66,15 @@ public class Population {
 		this.individuals = new Individual[size];
 		this.mutationRate = mutationRate;
 		this.crossoverRate = crossoverRate;
-		this.crossoverRateArray = new boolean[size];
-		this.mutationRateArray = new boolean[size];
+//		this.crossoverRateArray = new boolean[size];
+//		this.mutationRateArray = new boolean[size];
 		this.elitismRate = elitismRate;
 	}
 
+	/**
+	 * Initialize the Individuals with a random order of the (unique) city-representations.
+	 * @param tsp
+	 */
 	public void initializeIndividualsRandomly(TravelingSalesmanProblem tsp) {
 		for (int i = 0; i < size; i++) {
 			individuals[i] = new Individual(tsp);
@@ -58,11 +90,17 @@ public class Population {
 		return sb.toString();
 	}
 
+	/**
+	 * Generate the offspring of the current population.
+	 * @param tsp
+	 * @return
+	 */
 	public Population reproduce(TravelingSalesmanProblem tsp) {
-		// elitism
+		// grab the elite individuals
 		Individual elite[] = grabElite();
 
 		Population childrenPop = new Population(size, tsp, crossoverRate, mutationRate, elitismRate);
+		// insert elite individuals into new childPopulation
 		for (int i = 0; i < elite.length; i++) {
 			childrenPop.individuals[i] = elite[i];
 		}
@@ -71,49 +109,51 @@ public class Population {
 		int childrenCount = elite.length;
 		Individual parent1, parent2;
 
+		// generate as many children as needed until the population size is reached
 		while (childrenCount < this.size) {
 
-//			System.out.println("childrenCount: " + childrenCount);
-
-			// grab 2 parents
+			// grab 2 parents with tournament-selection
 			parent1 = selectTournament();
 			parent2 = selectTournament();
 
-			// get 2 children due to crossover
+			// get 2 children due to uox-crossover
 			int mask[] = getRandomMask();
 
 			// think of crossover rate
 			if (crossoverOk()) {
-				children[0] = parent1.getChild(0, mask, parent2);
+				children[0] = parent1.getChild(mask, parent2);
+				
+				// mutate children
+				// think of mutation rate
 				if (mutationOk()) {
 					children[0].mutateReciprocalExchange();
 				}
-				// put children into childrenPop
+				// put child into childrenPop
 				childrenPop.individuals[childrenCount++] = children[0];
 			}
 
-//			System.out.println("before 2nd child");
+			// if there is still space in the childrenPop for another child, get it
 			if (childrenCount < this.size) {
+				
 				if (crossoverOk()) {
-//					System.out.println("in second child");
-					children[1] = parent2.getChild(1, mask, parent1);
+					children[1] = parent2.getChild(mask, parent1);
+
+					// mutate child
+					// think of mutation rate
 					if (mutationOk()) {
 						children[1].mutateReciprocalExchange();
 					}
-					// what if childpop.size is odd? Check that! array overflow!
-//					System.out.println("childCount: " + childrenCount + "size: " + size);
-
 					childrenPop.individuals[childrenCount++] = children[1];
 				}
 			}
-
-			// mutate children
-			// think of mutation rate
-
 		}
 		return childrenPop;
 	}
 
+	/**
+	 * Gets the Size of the Population. Basically it's the length of the individuals-array.
+	 * @return size of the population
+	 */
 	public int getSize() {
 		return size;
 	}
@@ -122,16 +162,14 @@ public class Population {
 	 * Gets the individual at position n in individuals[]
 	 * 
 	 * @param n
-	 * @return
+	 * @return Individual at position n
 	 */
 	public Individual getIndividual(int n) {
-		// if (n > 49) {
-		// System.out.println("ala");
-		// }
 		return individuals[n];
 	}
 
 	/**
+	 * Tournament Selection: 
 	 * Selects a number of random individuals of the population and returns the
 	 * individual with the best fitness.
 	 * 
@@ -158,12 +196,16 @@ public class Population {
 		return winner;
 	}
 
+	/**
+	 * Checks, if the Individual is allowed to reproduce. <br/>
+	 * (Due to the crossoverRate)
+	 * @return If the Individual is allowed to reproduce
+	 */
 	private boolean crossoverOk() {
 		int absolute = (int) (crossoverRate * 100);
-		// System.out.println("absolute: " + absolute);
+		
 		// Random number between 0 and 99
 		int k = (int) (Math.random() * 100.0);
-//		System.out.println("k: " + k);
 
 		if (k <= absolute) {
 			return true;
@@ -193,26 +235,47 @@ public class Population {
 		// }
 	}
 
+	/**
+	 * Checks if an Individual is allowed to mutate (due to the mutationRate).
+	 * @return If the individual is allowed to mutate.
+	 */
 	private boolean mutationOk() {
-		// random number
-		int k = (int) (Math.random() * 100.0) % size;
+		
+		int absolute = (int) (mutationRate * 100);
+		
+		// Random number between 0 and 99
+		int k = (int) (Math.random() * 100.0);
 
-		while (mutationRateArray[k]) {
-			k = (int) (Math.random() * 100.0) % size;
-		}
-
-		mutationRateArray[k] = true;
-
-		// number to be true
-		int numTrue = (int) mutationRate * size;
-
-		if (k <= numTrue) {
+		if (k <= absolute) {
 			return true;
 		} else {
 			return false;
 		}
+		
+		// random number
+//		int k = (int) (Math.random() * 100.0) % size;
+//
+//		while (mutationRateArray[k]) {
+//			k = (int) (Math.random() * 100.0) % size;
+//		}
+//
+//		mutationRateArray[k] = true;
+//
+//		// number to be true
+//		int numTrue = (int) mutationRate * size;
+//
+//		if (k <= numTrue) {
+//			return true;
+//		} else {
+//			return false;
+//		}
 	}
 
+	/**
+	 * Generates a random Bit-Mask with length = citySize
+	 * @return generated Bit-Mask
+	 * TODO: better if boolean[], not int[] ?
+	 */
 	private int[] getRandomMask() {
 		int mask[] = new int[citySize];
 
@@ -223,34 +286,33 @@ public class Population {
 			} else {
 				mask[i] = 1;
 			}
-			// System.out.print(mask[i] + " ");
 		}
-
 		return mask;
 	}
 
+	/**
+	 * Grabs the elite (due to the elitismRate) of the current population.
+	 * @return the elite individuals of the population
+	 */
 	private Individual[] grabElite() {
 
-		// how many "best" chromosomes are going to be picked
+		// calculate the amount of "best" chromosomes that are going to be picked
 		int amount = (int) elitismRate * size;
 
 		// ascendingly ordered --> grab the first amount
 		TreeSet<Individual> map = new TreeSet<Individual>();
 
-		// order Individuals from population in a TreeSet according to their
-		// fitness
+		// order Individuals from population in a TreeSet according to their fitness
 		for (int i = 0; i < size; i++) {
 			map.add(individuals[i]);
 		}
 
-		// grab the first amount of Individuals of TreeSet
+		// grab the amount of Individuals of the TreeSet
 		Individual elite[] = new Individual[amount];
 
 		for (int i = 0; i < amount; i++) {
 			elite[i] = map.pollFirst();
 		}
-
 		return elite;
 	}
-
 }

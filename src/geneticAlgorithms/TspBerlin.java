@@ -1,12 +1,28 @@
 package geneticAlgorithms;
 
+/**
+ * The precise tsp-data that will be used to find a solution
+ * @author Maike
+ *
+ */
 public class TspBerlin extends TravelingSalesmanProblem {
 
+	/**
+	 * The Constructor.
+	 * @param popSize
+	 * @param genSize
+	 * @param crossoverRate
+	 * @param mutationRate
+	 * @param elitismRate
+	 */
 	public TspBerlin(int popSize, int genSize, float crossoverRate, float mutationRate, float elitismRate){
 		super(52, popSize, genSize, crossoverRate, mutationRate, elitismRate);
 		initialize();
 	}
 	
+	/**
+	 * Initialize the coordinates of the cities
+	 */
 	private void initialize(){
 		nodes[0][0] = 565;
 		nodes[0][1] = 575;
@@ -164,5 +180,4 @@ public class TspBerlin extends TravelingSalesmanProblem {
 		nodes[51][0] = 1740;
 		nodes[51][1] = 245;
 	}
-	
 }

@@ -1,13 +1,42 @@
 package geneticAlgorithms;
 
+/**
+ * This class represents a Traveling-Salesman-Problem (tsp)
+ * @author Maike Rees
+ *
+ */
 public abstract class TravelingSalesmanProblem {
 	
+	/**
+	 * The coordinates of the citys.
+	 */
 	protected int nodes[][];
+	/**
+	 * The amount of cities accused by the tsp.
+	 */
 	protected int dimension;
+	/**
+	 * The solution of the problem
+	 */
 	protected Individual solution;
+	/**
+	 * The initial Population to start to find the solution
+	 */ 
 	protected Population parentPop;
+	/**
+	 * How many generations will be generated to find a solution
+	 */
 	protected int genSize;
 	
+	/**
+	 * The Constructor.
+	 * @param dimension
+	 * @param popSize
+	 * @param genSize
+	 * @param crossoverRate
+	 * @param mutationRate
+	 * @param elitisimRate
+	 */
 	public TravelingSalesmanProblem(int dimension, int popSize, int genSize, float crossoverRate, 
 			float mutationRate, float elitisimRate){
 		this.dimension = dimension;
@@ -17,6 +46,7 @@ public abstract class TravelingSalesmanProblem {
 		parentPop.initializeIndividualsRandomly(this);
 	}
 	
+	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("Dimension: " + dimension);
@@ -51,7 +81,6 @@ public abstract class TravelingSalesmanProblem {
 	 * Finds a solution with a genetic algorithm 
 	 */
 	public void findSolution() {
-		
 		// initialize solution 
 		solution = initializeSolution();
 	
@@ -65,20 +94,22 @@ public abstract class TravelingSalesmanProblem {
 					solution = parentPop.getIndividual(i);
 				}
 			}
-//			System.out.println("fitness of current best solution: " + solution.getFitness());
-			
 			generationCounter++;
 		}
 	}
 	
-	public Population generateOffspring(){
-		return null;
-	}
 	
+	/**
+	 * @return the dimension (amount of cities) of the tsp
+	 */
 	public int getDimension(){
 		return dimension;
 	}
 	
+	/**
+	 * 
+	 * @return the best Individual of the initial Population 
+	 */
 	public Individual initializeSolution(){
 		solution = parentPop.getIndividual(0);
 		
@@ -87,8 +118,6 @@ public abstract class TravelingSalesmanProblem {
 				solution = parentPop.getIndividual(i);
 			}
 		}
-		
 		return solution;
 	}
-
 }
