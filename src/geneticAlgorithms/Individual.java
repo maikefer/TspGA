@@ -23,14 +23,31 @@ public class Individual implements Comparable<Individual> {
 	 * @return the fitness value (the smaller the better)
 	 */
 	public int getFitness() {
-		int fitness = 0;
+		
+		return (int)getRealFitness();
+//		int fitness = 0;
+//		
+//		for (int i = 0; i < cities.length - 1; i++){
+//			fitness += calculateDistance(tsp.getX(cities[i]), tsp.getX(cities[i + 1]), tsp.getY(cities[i]), tsp.getY(cities[i + 1]));
+//		}
+//		
+//		fitness += calculateDistance(tsp.getX(cities.length - 1), tsp.getX(0), 
+//						tsp.getY(cities.length - 1), tsp.getY(0));
+//
+//		return fitness;
+	}
+	
+	public double getRealFitness() {
+		double fitness = 0;
 		
 		for (int i = 0; i < cities.length - 1; i++){
-			fitness += calculateDistance(tsp.getX(cities[i]), tsp.getX(cities[i + 1]), tsp.getY(cities[i]), tsp.getY(cities[i + 1]));
+			fitness += Math.sqrt(calculateDistance(tsp.getX(cities[i]), tsp.getX(cities[i + 1]), 
+						tsp.getY(cities[i]), tsp.getY(cities[i + 1])));
 		}
 		
-		fitness += calculateDistance(tsp.getX(cities.length - 1), tsp.getX(0), 
-						tsp.getY(cities.length - 1), tsp.getY(0));
+		fitness += Math.sqrt(calculateDistance(tsp.getX(cities.length - 1), tsp.getX(0), 
+						tsp.getY(cities.length - 1), tsp.getY(0)));
+		
 
 		return fitness;
 	}

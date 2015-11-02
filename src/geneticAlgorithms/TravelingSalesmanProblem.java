@@ -65,7 +65,7 @@ public abstract class TravelingSalesmanProblem {
 					solution = parentPop.getIndividual(i);
 				}
 			}
-			System.out.println("fitness of current best solution: " + solution.getFitness());
+//			System.out.println("fitness of current best solution: " + solution.getFitness());
 			
 			generationCounter++;
 		}

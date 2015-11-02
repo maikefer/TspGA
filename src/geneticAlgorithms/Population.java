@@ -30,10 +30,9 @@ public class Population {
 	private boolean crossoverRateArray[];
 	private boolean mutationRateArray[];
 	private float elitismRate;
-	
 
-	public Population(int size, TravelingSalesmanProblem tsp, float crossoverRate, 
-							float mutationRate, float elitismRate) {
+	public Population(int size, TravelingSalesmanProblem tsp, float crossoverRate, float mutationRate,
+			float elitismRate) {
 		this.size = size;
 		this.citySize = tsp.getDimension();
 		this.individuals = new Individual[size];
@@ -62,18 +61,20 @@ public class Population {
 	public Population reproduce(TravelingSalesmanProblem tsp) {
 		// elitism
 		Individual elite[] = grabElite();
-		
-		Population childrenPop = new Population(size, tsp, crossoverRate,
-														mutationRate, elitismRate);
+
+		Population childrenPop = new Population(size, tsp, crossoverRate, mutationRate, elitismRate);
 		for (int i = 0; i < elite.length; i++) {
 			childrenPop.individuals[i] = elite[i];
 		}
-		
+
 		Individual children[] = new Individual[2];
 		int childrenCount = elite.length;
 		Individual parent1, parent2;
 
 		while (childrenCount < this.size) {
+
+//			System.out.println("childrenCount: " + childrenCount);
+
 			// grab 2 parents
 			parent1 = selectTournament();
 			parent2 = selectTournament();
@@ -84,28 +85,31 @@ public class Population {
 			// think of crossover rate
 			if (crossoverOk()) {
 				children[0] = parent1.getChild(0, mask, parent2);
+				if (mutationOk()) {
+					children[0].mutateReciprocalExchange();
+				}
+				// put children into childrenPop
+				childrenPop.individuals[childrenCount++] = children[0];
 			}
 
-			if (crossoverOk()) {
-				children[1] = parent2.getChild(1, mask, parent1);
+//			System.out.println("before 2nd child");
+			if (childrenCount < this.size) {
+				if (crossoverOk()) {
+//					System.out.println("in second child");
+					children[1] = parent2.getChild(1, mask, parent1);
+					if (mutationOk()) {
+						children[1].mutateReciprocalExchange();
+					}
+					// what if childpop.size is odd? Check that! array overflow!
+//					System.out.println("childCount: " + childrenCount + "size: " + size);
+
+					childrenPop.individuals[childrenCount++] = children[1];
+				}
 			}
 
 			// mutate children
 			// think of mutation rate
-			if (mutationOk()) {
-				children[0].mutateReciprocalExchange();
-			}
-			if (mutationOk()) {
-				children[1].mutateReciprocalExchange();
-			}
-			
-			// put children into childrenPop
-			childrenPop.individuals[childrenCount++] = children[0];
 
-			// what if childpop.size is odd? Check that! array overflow!
-			if (childrenCount < this.size) {
-				childrenPop.individuals[childrenCount++] = children[1];
-			}
 		}
 		return childrenPop;
 	}
@@ -121,9 +125,9 @@ public class Population {
 	 * @return
 	 */
 	public Individual getIndividual(int n) {
-		if (n > 49) {
-			System.out.println("ala");
-		}
+		// if (n > 49) {
+		// System.out.println("ala");
+		// }
 		return individuals[n];
 	}
 
@@ -155,24 +159,38 @@ public class Population {
 	}
 
 	private boolean crossoverOk() {
+		int absolute = (int) (crossoverRate * 100);
+		// System.out.println("absolute: " + absolute);
+		// Random number between 0 and 99
+		int k = (int) (Math.random() * 100.0);
+//		System.out.println("k: " + k);
 
-		// random number
-		int k = (int) (Math.random() * 100.0) % size;
-
-		while (crossoverRateArray[k]) {
-			k = (int) (Math.random() * 100.0) % size;
-		}
-
-		crossoverRateArray[k] = true;
-
-		// number to be true
-		int numTrue = (int) crossoverRate * size;
-
-		if (k <= numTrue) {
+		if (k <= absolute) {
 			return true;
 		} else {
 			return false;
 		}
+
+		// random number
+		// int k = (int) (Math.random() * 100.0) % size;
+		// int i = 0;
+		// // unique k
+		// while (crossoverRateArray[k]) {
+		// k = (int) (Math.random() * 100.0) % size;
+		// i++;
+		// System.out.println("stuck " + i);
+		// }
+		//
+		// crossoverRateArray[k] = true;
+		//
+		// // number to be true
+		// int numTrue = (int) (crossoverRate * size);
+		//
+		// if (k <= numTrue) {
+		// return true;
+		// } else {
+		// return false;
+		// }
 	}
 
 	private boolean mutationOk() {
@@ -210,27 +228,28 @@ public class Population {
 
 		return mask;
 	}
-	
+
 	private Individual[] grabElite() {
-		
+
 		// how many "best" chromosomes are going to be picked
 		int amount = (int) elitismRate * size;
-		
+
 		// ascendingly ordered --> grab the first amount
 		TreeSet<Individual> map = new TreeSet<Individual>();
-		
-		// order Individuals from population in a TreeSet according to their fitness
+
+		// order Individuals from population in a TreeSet according to their
+		// fitness
 		for (int i = 0; i < size; i++) {
 			map.add(individuals[i]);
 		}
-		
+
 		// grab the first amount of Individuals of TreeSet
 		Individual elite[] = new Individual[amount];
-		
-		for (int i = 0; i < amount; i++){
+
+		for (int i = 0; i < amount; i++) {
 			elite[i] = map.pollFirst();
 		}
-		
+
 		return elite;
 	}
 
