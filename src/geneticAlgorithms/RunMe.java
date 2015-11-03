@@ -29,6 +29,12 @@ public class RunMe {
 		TravelingSalesmanProblem tsp = new TspBerlin(popSize, genSize, crossoverRate, mutationRate, 
 															elitismRate);
 		
+//		TravelingSalesmanProblem tsp2 = new TspMultipleCities(10, popSize, genSize, crossoverRate, 
+																	// mutationRate, elitismRate);
+		
+
+				
+		
 		long time = System.currentTimeMillis();
 		tsp.findSolution();
 		time = System.currentTimeMillis() - time;
