@@ -39,9 +39,9 @@ public class Individual implements Comparable<Individual> {
 	 * 
 	 * @return the fitness value (the smaller the better)
 	 */
-	public int getFitness() {
+//	public int getFitness() {
 		
-		return (int)getRealFitness();
+//		return (int)getRealFitness();
 //		int fitness = 0;
 //		
 //		for (int i = 0; i < cities.length - 1; i++){
@@ -52,7 +52,7 @@ public class Individual implements Comparable<Individual> {
 //						tsp.getY(cities.length - 1), tsp.getY(0));
 //
 //		return fitness;
-	}
+//	}
 	
 	/**
 	 * The Fitness is the total (slow) distance traveled in this individual. We assume
@@ -60,7 +60,7 @@ public class Individual implements Comparable<Individual> {
 	 * 
 	 * @return the fitness value (the smaller the better)
 	 */
-	public double getRealFitness() {
+	public int getFitness() {
 		double fitness = 0;
 		
 		for (int i = 0; i < cities.length - 1; i++){
@@ -70,7 +70,7 @@ public class Individual implements Comparable<Individual> {
 		
 		fitness += Math.sqrt(calculateDistance(tsp.getX(cities.length - 1), tsp.getX(0), 
 						tsp.getY(cities.length - 1), tsp.getY(0)));
-		return fitness;
+		return (int)fitness;
 	}
 
 	/**
