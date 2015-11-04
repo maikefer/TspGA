@@ -246,6 +246,14 @@ public class Individual implements Comparable<Individual> {
 		return child;
 	}
 	
+	/**
+	 * It finds the position of the transfered number within the current cities array.
+	 * It only searches between x to y
+	 * @param n
+	 * @param x 
+	 * @param y
+	 * @return the position of the transfered number in the current cities-array
+	 */
 	private int findPositionOf(int n, int x, int y) {
 		for (int i = x; i <= y; i++) {
 			if (this.cities[i] == n) {

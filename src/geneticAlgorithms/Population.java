@@ -333,7 +333,11 @@ public class Population {
 		return elite;
 	}
 	
-	// return array[0] < array[1] IMMMER
+	/**
+	 * Calculates two random points within the transfered dimension.
+	 * @param dimension 
+	 * @return an array with to points whereas the first point is always smaller than the second
+	 */
 	public int[] getTwoPointsForPMX(int dimension){
 	
 		int array[] = new int[2];
@@ -354,6 +358,10 @@ public class Population {
 		return array;
 	}
 	
+	/**
+	 * It calculates the average fitness of the whole population
+	 * @return The average fitness of the population
+	 */
 	public double getAverageFitness(){
 		double average = 0;
 		

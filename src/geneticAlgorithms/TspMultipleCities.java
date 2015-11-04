@@ -1,7 +1,22 @@
 package geneticAlgorithms;
 
+/**
+ * A Tsp for testing purposes.
+ * It uses real City - Data but only as much as you want it to.
+ * @author Maike
+ *
+ */
 public class TspMultipleCities extends TravelingSalesmanProblem {
 
+	/**
+	 * The Constructor creates a new Tsp.
+	 * @param dimension
+	 * @param popSize
+	 * @param genSize
+	 * @param crossoverRate
+	 * @param mutationRate
+	 * @param elitisimRate
+	 */
 	public TspMultipleCities(int dimension, int popSize, int genSize, float crossoverRate, float mutationRate,
 								float elitisimRate) {
 				
@@ -11,6 +26,11 @@ public class TspMultipleCities extends TravelingSalesmanProblem {
 			
 	}
 	
+	/**
+	 * This method copies as many city-coordinates as determined in the constructor 
+	 * 				form the integer array that is transfered.
+	 * @param arrayCopy
+	 */
 	private void initialize(int[][] arrayCopy){
 		
 		for(int i = 0; i < this.dimension; i++) {

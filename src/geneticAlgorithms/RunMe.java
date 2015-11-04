@@ -10,7 +10,7 @@ import java.util.Random;
  */
 public class RunMe {
 	
-	public static final int seed = 500;
+	public static final int seed = 1010;
 	public static final Random randomGenerator = new Random(seed);
 	
 	private static int popSize = 100; 
@@ -25,13 +25,13 @@ public class RunMe {
 	 */
 	public static void main(String[] args) {
 		// TODO Citysize must be smaller than 100! (is that true?)
-	
+
+//		TravelingSalesmanProblem tsp2 = new TspMultipleCities(7, popSize, genSize, crossoverRate, 
+//		 mutationRate, elitismRate);
+		
 		TravelingSalesmanProblem tsp = new TspBerlin(popSize, genSize, crossoverRate, mutationRate, 
 															elitismRate);
 		
-//		TravelingSalesmanProblem tsp2 = new TspMultipleCities(7, popSize, genSize, crossoverRate, 
-//																	 mutationRate, elitismRate);
-
 		long time = System.currentTimeMillis();
 		tsp.findSolution();
 		time = System.currentTimeMillis() - time;
@@ -41,6 +41,20 @@ public class RunMe {
 		System.out.println("It took " + time + " milliseconds");
 		System.out.println("The fitness is: " + tsp.solution.getFitness());
 		System.out.println("And the solution is: " + tsp.solution.toString());
+		
+		// Do it again!
+		
+		tsp = new TspBerlin(popSize, genSize, crossoverRate, mutationRate, 
+				elitismRate);
+		time = System.currentTimeMillis();
+		tsp.findSolution();
+		time = System.currentTimeMillis() - time;
+		
+		consoleOutput();
+		
+		System.out.println("It took " + time + " milliseconds");
+		System.out.println("The fitness is: " + tsp.solution.getFitness());
+		System.out.println("And the solution is: " + tsp.solution.toString());		
 
 	}
 	
