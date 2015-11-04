@@ -97,14 +97,15 @@ public class Individual implements Comparable<Individual> {
 	 */
 	public void initializeRandomly() {
 		int city = 0;
-		Random generator = new Random();
+//		Random generator = new Random();
 		boolean loop;
 
 		for (int i = 0; i < cities.length; i++) {
 			loop = true;
 
 			while (loop) {
-				city = Math.abs(generator.nextInt() % (cities.length));
+				city = RunMe.randomGenerator.nextInt(cities.length);
+//				city = Math.abs(generator.nextInt() % (cities.length));
 
 				// '\u0000' is the default value for chars --> char hasn't been 
 				// initialized
@@ -123,11 +124,11 @@ public class Individual implements Comparable<Individual> {
 	public void mutateReciprocalExchange() {
 
 		// take two random numbers within the array, that are not the same
-		int k = (int) (Math.random() * 100.0) % cities.length;
-		int j = (int) (Math.random() * 100.0) % cities.length;
+		int k = RunMe.randomGenerator.nextInt(cities.length);
+		int j = RunMe.randomGenerator.nextInt(cities.length);
 		
 		while (j == k) {
-			j = (int) (Math.random() * 100.0) % cities.length;
+			j = RunMe.randomGenerator.nextInt(cities.length);
 		}
 		
 		// swap the cities located at the randomly generated positions

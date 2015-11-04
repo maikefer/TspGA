@@ -199,9 +199,7 @@ public class Population {
 		Individual tournament[] = new Individual[tournamentNumber];
 
 		for (int i = 0; i < tournamentNumber; i++) {
-			// a number between 0 and size-1 if size is smaller than
-			// 100
-			int k = (int) (Math.random() * 100.0) % size;
+			int k = RunMe.randomGenerator.nextInt(size);
 			tournament[i] = this.getIndividual(k);
 		}
 
@@ -224,7 +222,7 @@ public class Population {
 		int absolute = (int) (crossoverRate * 100);
 		
 		// Random number between 0 and 99
-		int k = (int) (Math.random() * 100.0);
+		int k = RunMe.randomGenerator.nextInt(100);
 
 		if (k <= absolute) {
 			return true;
@@ -263,7 +261,7 @@ public class Population {
 		int absolute = (int) (mutationRate * 100);
 		
 		// Random number between 0 and 99
-		int k = (int) (Math.random() * 100.0);
+		int k = RunMe.randomGenerator.nextInt(100);
 
 		if (k <= absolute) {
 			return true;
@@ -299,8 +297,8 @@ public class Population {
 		int mask[] = new int[citySize];
 
 		for (int i = 0; i < citySize; i++) {
-			double j = Math.random();
-			if (j < 0.5) {
+			double j = RunMe.randomGenerator.nextInt(100);
+			if (j < 50) {
 				mask[i] = 0;
 			} else {
 				mask[i] = 1;
@@ -340,11 +338,11 @@ public class Population {
 	
 		int array[] = new int[2];
 	
-		array[0] = (int) ((Math.random() * 100) % dimension);
-		array[1] = (int) ((Math.random() * 100) % dimension);
+		array[0] = RunMe.randomGenerator.nextInt(dimension);
+		array[1] = RunMe.randomGenerator.nextInt(dimension);
 		
 		while (array[0] ==  array[1]) {
-			array[1] = (int) ((Math.random() * 100) % dimension);
+			array[1] = RunMe.randomGenerator.nextInt(dimension);
 		}
 		
 		if (array[0] > array[1]) {
