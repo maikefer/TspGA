@@ -176,7 +176,7 @@ public class Individual implements Comparable<Individual> {
 	 * @param parent The second parent.
 	 * @return The generated Child-Individual.
 	 */
-	public Individual getChild(int mask[], Individual parent){
+	public Individual getChildUOX(int mask[], Individual parent){
 		Individual children = new Individual(tsp); // will get randomly initialized, but doesn't matter
 		children.initializeWithMinus1();
 		
@@ -203,6 +203,59 @@ public class Individual implements Comparable<Individual> {
 		
 		return children;
 	}
+	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param parent2
+	 */
+	public Individual getChildPMX(int x, int y, Individual parent2){
+		
+		Individual child = new Individual(tsp);
+		child.initializeWithMinus1();
+		
+//		int line1[] = new int[y - x];  (can use parents?)
+//		int line2[] = new int[y - x];
+		
+		// copy randomly decided cities from parent 2 into child
+		for (int i = x; i <= y; i++) {
+			child.cities[i] = parent2.cities[i];
+		}
+		
+	
+		for (int i = 0; i < child.cities.length; i++){
+			if(child.cities[i] == -1) {
+				
+				// fill cities from parent1 into cities, that are not going to be double
+				if(!child.contains(this.cities[i])) {
+					child.cities[i] = this.cities[i];
+				} else { 
+					// map the missing cities 
+					int matchingNumber = this.cities[parent2.findPositionOf(this.cities[i], x, y)];
+					
+					while (child.contains(matchingNumber)){
+						matchingNumber = this.cities[parent2.findPositionOf(matchingNumber, x, y)];
+					} 
+					
+					child.cities[i] = matchingNumber;
+				}
+			} 
+		}
+		return child;
+	}
+	
+	private int findPositionOf(int n, int x, int y) {
+		for (int i = x; i <= y; i++) {
+			if (this.cities[i] == n) {
+				return i;
+			}
+		}
+		
+		return -1;
+	
+	}
+	
 	
 	/**
 	 * Checks if the city represented by n is already contained 

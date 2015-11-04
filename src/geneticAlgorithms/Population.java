@@ -116,35 +116,54 @@ public class Population {
 			parent1 = selectTournament();
 			parent2 = selectTournament();
 
-			// get 2 children due to uox-crossover
-			int mask[] = getRandomMask();
+		
+			// get 2 children 
+			
+			// UOX:
+		//	int mask[] = getRandomMask();
+			// PMX: 
+			int pointsForPmx[] = getTwoPointsForPMX(tsp.dimension);
 
 			// think of crossover rate
 			if (crossoverOk()) {
-				children[0] = parent1.getChild(mask, parent2);
+				// UOX:
+			//	children[0] = parent1.getChildUOX(mask, parent2);
+				// PMX:
+				children[0] = parent1.getChildPMX(pointsForPmx[0], pointsForPmx[1], parent2);
 				
 				// mutate children
 				// think of mutation rate
 				if (mutationOk()) {
 					children[0].mutateReciprocalExchange();
 				}
-				// put child into childrenPop
-				childrenPop.individuals[childrenCount++] = children[0];
+			
+			} else {
+				children[0] = parent1;
 			}
+			
+			// put child (or parent if no crossover) into childrenPop
+			childrenPop.individuals[childrenCount++] = children[0];
 
 			// if there is still space in the childrenPop for another child, get it
 			if (childrenCount < this.size) {
 				
 				if (crossoverOk()) {
-					children[1] = parent2.getChild(mask, parent1);
-
+					// UOX:
+					//children[1] = parent2.getChildUOX(mask, parent1);
+					// PMX:
+					children[1] = parent2.getChildPMX(pointsForPmx[0], pointsForPmx[1], parent1);
+					
 					// mutate child
 					// think of mutation rate
 					if (mutationOk()) {
 						children[1].mutateReciprocalExchange();
 					}
-					childrenPop.individuals[childrenCount++] = children[1];
+					
+				} else {
+					children[1] = parent2;
 				}
+				
+				childrenPop.individuals[childrenCount++] = children[1];
 			}
 		}
 		return childrenPop;
@@ -314,5 +333,38 @@ public class Population {
 			elite[i] = map.pollFirst();
 		}
 		return elite;
+	}
+	
+	// return array[0] < array[1] IMMMER
+	public int[] getTwoPointsForPMX(int dimension){
+	
+		int array[] = new int[2];
+	
+		array[0] = (int) ((Math.random() * 100) % dimension);
+		array[1] = (int) ((Math.random() * 100) % dimension);
+		
+		while (array[0] ==  array[1]) {
+			array[1] = (int) ((Math.random() * 100) % dimension);
+		}
+		
+		if (array[0] > array[1]) {
+			int save = array[0];
+			array[0] = array[1];
+			array[1] = save;
+		}
+		
+		return array;
+	}
+	
+	public double getAverageFitness(){
+		double average = 0;
+		
+		for (int i = 0; i < size; i++) {
+			average += individuals[i].getFitness();
+		}
+		
+		average =  average / size;
+		
+		return average;
 	}
 }
