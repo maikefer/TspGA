@@ -1,7 +1,5 @@
 package geneticAlgorithms;
 
-import java.util.Random;
-
 /**
  * This class represents an individual. An individual is a solution for the TravelingSalesmanProblem. 
  * <br/> <br/>
@@ -136,7 +134,47 @@ public class Individual implements Comparable<Individual> {
 		cities[k] = cities[j];
 		cities[j] = save;
 	}
+	
+	public void mutateBetter() {
+		int twoPoints[] = getTwoPoints();
+		int temp;
+		
+		while (twoPoints[0] < twoPoints[1]) {
+			temp = cities[twoPoints[0]];
+			cities[twoPoints[0]] =  cities[twoPoints[1]];
+			cities[twoPoints[1]] = temp;
+			twoPoints[0]++;
+			twoPoints[1]--;
+		}
+	}
 
+
+	/**
+	 * Calculates two random points within the length of the cities array.
+	 * @param dimension 
+	 * @return an array with two points whereas the first point is always smaller than the second
+	 */
+	public int[] getTwoPoints(){
+	
+		int dimension = cities.length;
+		int array[] = new int[2];
+	
+		array[0] = RunMe.randomGenerator.nextInt(dimension);
+		array[1] = RunMe.randomGenerator.nextInt(dimension);
+		
+		while (array[0] ==  array[1]) {
+			array[1] = RunMe.randomGenerator.nextInt(dimension);
+		}
+		
+		if (array[0] > array[1]) {
+			int save = array[0];
+			array[0] = array[1];
+			array[1] = save;
+		}
+		
+		return array;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -190,7 +228,7 @@ public class Individual implements Comparable<Individual> {
 		for (int i = 0; i < cities.length; i++) {
 			if (mask[i] == 0) {
 				// get missing numbers in order of second parent
-				// TODO can make faster by remembering the last j 
+				//  can make faster by remembering the last j 
 						// (don't have to start looking from the beginning)
 			
 				for (int j = 0; j < cities.length; j++) {

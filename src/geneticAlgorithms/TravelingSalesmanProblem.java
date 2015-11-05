@@ -94,9 +94,9 @@ public abstract class TravelingSalesmanProblem {
 					solution = parentPop.getIndividual(i);
 				}
 			}
-			System.out.println("Generation Counter: " + generationCounter 
-										+ " best Fitness: " + solution.getFitness()
-										+ " average Fitness: " + parentPop.getAverageFitness());
+//			System.out.println("Generation Counter: " + generationCounter 
+//										+ " best Fitness: " + solution.getFitness()
+//										+ " average Fitness: " + parentPop.getAverageFitness());
 			RunMe.printInFile(solution.getFitness());
 			generationCounter++;
 		}

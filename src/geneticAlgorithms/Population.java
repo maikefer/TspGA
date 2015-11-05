@@ -29,7 +29,7 @@ public class Population {
 	 * The amount of Individuals that will be compared in the tournament
 	 * selection
 	 */
-	private final int tournamentNumber = 10;
+	private final int tournamentNumber = 7;
 	
 	/**
 	 * The crossoverRate describes how many of the Individuals in the population are allowed to reproduce.
@@ -122,7 +122,7 @@ public class Population {
 			// UOX:
 		//	int mask[] = getRandomMask();
 			// PMX: 
-			int pointsForPmx[] = getTwoPointsForPMX(tsp.dimension);
+			int pointsForPmx[] = parent1.getTwoPoints();
 
 			// think of crossover rate
 			if (crossoverOk()) {
@@ -134,7 +134,8 @@ public class Population {
 				// mutate children
 				// think of mutation rate
 				if (mutationOk()) {
-					children[0].mutateReciprocalExchange();
+//					children[0].mutateReciprocalExchange();
+					children[0].mutateBetter();
 				}
 			
 			} else {
@@ -156,7 +157,8 @@ public class Population {
 					// mutate child
 					// think of mutation rate
 					if (mutationOk()) {
-						children[1].mutateReciprocalExchange();
+//						children[1].mutateReciprocalExchange();
+						children[1].mutateBetter();
 					}
 					
 				} else {
@@ -332,31 +334,31 @@ public class Population {
 		}
 		return elite;
 	}
-	
-	/**
-	 * Calculates two random points within the transfered dimension.
-	 * @param dimension 
-	 * @return an array with to points whereas the first point is always smaller than the second
-	 */
-	public int[] getTwoPointsForPMX(int dimension){
-	
-		int array[] = new int[2];
-	
-		array[0] = RunMe.randomGenerator.nextInt(dimension);
-		array[1] = RunMe.randomGenerator.nextInt(dimension);
-		
-		while (array[0] ==  array[1]) {
-			array[1] = RunMe.randomGenerator.nextInt(dimension);
-		}
-		
-		if (array[0] > array[1]) {
-			int save = array[0];
-			array[0] = array[1];
-			array[1] = save;
-		}
-		
-		return array;
-	}
+//	
+//	/**
+//	 * Calculates two random points within the transfered dimension.
+//	 * @param dimension 
+//	 * @return an array with to points whereas the first point is always smaller than the second
+//	 */
+//	public int[] getTwoPoints(int dimension){
+//	
+//		int array[] = new int[2];
+//	
+//		array[0] = RunMe.randomGenerator.nextInt(dimension);
+//		array[1] = RunMe.randomGenerator.nextInt(dimension);
+//		
+//		while (array[0] ==  array[1]) {
+//			array[1] = RunMe.randomGenerator.nextInt(dimension);
+//		}
+//		
+//		if (array[0] > array[1]) {
+//			int save = array[0];
+//			array[0] = array[1];
+//			array[1] = save;
+//		}
+//		
+//		return array;
+//	}
 	
 	/**
 	 * It calculates the average fitness of the whole population

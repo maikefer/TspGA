@@ -13,15 +13,15 @@ import java.util.Random;
  */
 public class RunMe {
 	
-	public static final int seed = 900;
+	public static final int seed = 10;
 	public static final Random randomGenerator = new Random(seed);
 	public static PrintWriter writer;
 	
-	private static int popSize = 150; 
-	private static int genSize = 1000;
-	private static float crossoverRate = 0.9F;
-	private static float mutationRate = 0.1F;
-	private static float elitismRate = 0.1F;
+	private static int popSize = 200; 
+	private static int genSize = 1500;
+	private static float crossoverRate = 1.0F;
+	private static float mutationRate = 0.2F;
+	private static float elitismRate = 0.09F;
 	
 	private static TravelingSalesmanProblem tsp;
 	
@@ -32,7 +32,8 @@ public class RunMe {
 	public static void main(String[] args) {
 
 //		TravelingSalesmanProblem tsp2 = new TspMultipleCities(7, popSize, genSize, crossoverRate, 
-//		 mutationRate, elitismRate);
+//				mutationRate, elitismRate);
+		
 		
 		for (int i = 1; i < 6; i++) {
 			newWriter(i);
@@ -46,13 +47,13 @@ public class RunMe {
 	 */
 	private static void consoleOutput(){
 		System.out.println("I found a solution for the Traveling Salesman Problem: ");
-		System.out.println("Parameters: ");
-		System.out.println("Seed: " + seed);
-		System.out.println("Population Size: " + popSize);
-		System.out.println("Generation Span: " + genSize);
-		System.out.println("Crossover Rate: " + crossoverRate);
-		System.out.println("Mutation Rate: " + mutationRate);
-		System.out.println("Elitism Rate: " + elitismRate);
+//		System.out.println("Parameters: ");
+//		System.out.println("Seed: " + seed);
+//		System.out.println("Population Size: " + popSize);
+//		System.out.println("Generation Span: " + genSize);
+//		System.out.println("Crossover Rate: " + crossoverRate);
+//		System.out.println("Mutation Rate: " + mutationRate);
+//		System.out.println("Elitism Rate: " + elitismRate);
 	}
 
 	public static void printInFile(int word) {
