@@ -97,6 +97,7 @@ public abstract class TravelingSalesmanProblem {
 			System.out.println("Generation Counter: " + generationCounter 
 										+ " best Fitness: " + solution.getFitness()
 										+ " average Fitness: " + parentPop.getAverageFitness());
+			RunMe.printInFile(solution.getFitness());
 			generationCounter++;
 		}
 	}

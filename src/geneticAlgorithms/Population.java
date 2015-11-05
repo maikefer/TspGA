@@ -29,7 +29,7 @@ public class Population {
 	 * The amount of Individuals that will be compared in the tournament
 	 * selection
 	 */
-	private final int tournamentNumber = 4;
+	private final int tournamentNumber = 10;
 	
 	/**
 	 * The crossoverRate describes how many of the Individuals in the population are allowed to reproduce.

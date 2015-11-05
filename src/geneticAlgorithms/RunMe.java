@@ -1,5 +1,8 @@
 package geneticAlgorithms;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 /**
@@ -10,52 +13,32 @@ import java.util.Random;
  */
 public class RunMe {
 	
-	public static final int seed = 1010;
+	public static final int seed = 900;
 	public static final Random randomGenerator = new Random(seed);
+	public static PrintWriter writer;
 	
-	private static int popSize = 100; 
-	private static int genSize = 800;
+	private static int popSize = 150; 
+	private static int genSize = 1000;
 	private static float crossoverRate = 0.9F;
 	private static float mutationRate = 0.1F;
 	private static float elitismRate = 0.1F;
+	
+	private static TravelingSalesmanProblem tsp;
 	
 	/**
 	 * You can put in all parameters. This method starts the solution-finding-process for the tsp.
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Citysize must be smaller than 100! (is that true?)
 
 //		TravelingSalesmanProblem tsp2 = new TspMultipleCities(7, popSize, genSize, crossoverRate, 
 //		 mutationRate, elitismRate);
 		
-		TravelingSalesmanProblem tsp = new TspBerlin(popSize, genSize, crossoverRate, mutationRate, 
-															elitismRate);
-		
-		long time = System.currentTimeMillis();
-		tsp.findSolution();
-		time = System.currentTimeMillis() - time;
-		
-		consoleOutput();
-		
-		System.out.println("It took " + time + " milliseconds");
-		System.out.println("The fitness is: " + tsp.solution.getFitness());
-		System.out.println("And the solution is: " + tsp.solution.toString());
-		
-		// Do it again!
-		
-		tsp = new TspBerlin(popSize, genSize, crossoverRate, mutationRate, 
-				elitismRate);
-		time = System.currentTimeMillis();
-		tsp.findSolution();
-		time = System.currentTimeMillis() - time;
-		
-		consoleOutput();
-		
-		System.out.println("It took " + time + " milliseconds");
-		System.out.println("The fitness is: " + tsp.solution.getFitness());
-		System.out.println("And the solution is: " + tsp.solution.toString());		
-
+		for (int i = 1; i < 6; i++) {
+			newWriter(i);
+			solve();
+			writer.close();
+		}
 	}
 	
 	/**
@@ -70,6 +53,41 @@ public class RunMe {
 		System.out.println("Crossover Rate: " + crossoverRate);
 		System.out.println("Mutation Rate: " + mutationRate);
 		System.out.println("Elitism Rate: " + elitismRate);
+	}
+
+	public static void printInFile(int word) {
+		writer.println(word + ",");
+	}
+	
+	public static void solve(){
+
+		tsp = new TspBerlin(popSize, genSize, crossoverRate, mutationRate, 
+															elitismRate);
+		
+		long time = System.currentTimeMillis();
+		tsp.findSolution();
+		time = System.currentTimeMillis() - time;
+		
+		consoleOutput();
+		
+		System.out.println("It took " + time + " milliseconds");
+		System.out.println("The fitness is: " + tsp.solution.getFitness());
+		System.out.println("And the solution is: " + tsp.solution.toString());
+		
+		printInFile(1);
+	}
+	
+	public static void newWriter(int num){
+		String fileName = "tsp";
+		fileName += num;
+		fileName += ".txt";
+		
+		try {
+			writer = new PrintWriter(fileName, "UTF-8");
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
