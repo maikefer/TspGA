@@ -29,7 +29,7 @@ public class Population {
 	 * The amount of Individuals that will be compared in the tournament
 	 * selection
 	 */
-	private final int tournamentNumber = 7;
+	private final int tournamentNumber = 5;
 	
 	/**
 	 * The crossoverRate describes how many of the Individuals in the population are allowed to reproduce.
@@ -120,14 +120,14 @@ public class Population {
 			// get 2 children 
 			
 			// UOX:
-		//	int mask[] = getRandomMask();
+//			int mask[] = getRandomMask();
 			// PMX: 
 			int pointsForPmx[] = parent1.getTwoPoints();
 
 			// think of crossover rate
 			if (crossoverOk()) {
 				// UOX:
-			//	children[0] = parent1.getChildUOX(mask, parent2);
+//				children[0] = parent1.getChildUOX(mask, parent2);
 				// PMX:
 				children[0] = parent1.getChildPMX(pointsForPmx[0], pointsForPmx[1], parent2);
 				
@@ -150,7 +150,7 @@ public class Population {
 				
 				if (crossoverOk()) {
 					// UOX:
-					//children[1] = parent2.getChildUOX(mask, parent1);
+//					children[1] = parent2.getChildUOX(mask, parent1);
 					// PMX:
 					children[1] = parent2.getChildPMX(pointsForPmx[0], pointsForPmx[1], parent1);
 					

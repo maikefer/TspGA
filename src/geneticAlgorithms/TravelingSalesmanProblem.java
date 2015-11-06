@@ -85,8 +85,13 @@ public abstract class TravelingSalesmanProblem {
 		solution = initializeSolution();
 	
 		int generationCounter = 0;
+		RunMe.printInFile("averageFitness" + "," + "bestFitness");
 		
 		while (generationCounter < genSize + 1) {
+			String string = (int)parentPop.getAverageFitness() + "," + solution.getFitness();
+			RunMe.printInFile(string);
+//			RunMe.printInFile((int)parentPop.getAverageFitness());
+//			RunMe.printInFile(solution.getFitness());
 			parentPop = parentPop.reproduce(this);
 			// save best child as solution
 			for (int i = 0; i < parentPop.getSize(); i++) {
@@ -97,7 +102,7 @@ public abstract class TravelingSalesmanProblem {
 //			System.out.println("Generation Counter: " + generationCounter 
 //										+ " best Fitness: " + solution.getFitness()
 //										+ " average Fitness: " + parentPop.getAverageFitness());
-			RunMe.printInFile(solution.getFitness());
+//			
 			generationCounter++;
 		}
 	}

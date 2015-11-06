@@ -13,14 +13,14 @@ import java.util.Random;
  */
 public class RunMe {
 	
-	public static final int seed = 10;
+	public static final int seed = 500;
 	public static final Random randomGenerator = new Random(seed);
 	public static PrintWriter writer;
 	
-	private static int popSize = 200; 
-	private static int genSize = 1500;
-	private static float crossoverRate = 1.0F;
-	private static float mutationRate = 0.2F;
+	private static int popSize = 150; 
+	private static int genSize = 1000;
+	private static float crossoverRate = 0.1F;
+	private static float mutationRate = 0.5F;
 	private static float elitismRate = 0.09F;
 	
 	private static TravelingSalesmanProblem tsp;
@@ -56,8 +56,8 @@ public class RunMe {
 //		System.out.println("Elitism Rate: " + elitismRate);
 	}
 
-	public static void printInFile(int word) {
-		writer.println(word + ",");
+	public static void printInFile(String word) {
+		writer.println(word);
 	}
 	
 	public static void solve(){
@@ -75,7 +75,6 @@ public class RunMe {
 		System.out.println("The fitness is: " + tsp.solution.getFitness());
 		System.out.println("And the solution is: " + tsp.solution.toString());
 		
-		printInFile(1);
 	}
 	
 	public static void newWriter(int num){
