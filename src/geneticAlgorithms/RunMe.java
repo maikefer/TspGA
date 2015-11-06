@@ -19,8 +19,8 @@ public class RunMe {
 	
 	private static int popSize = 150; 
 	private static int genSize = 1000;
-	private static float crossoverRate = 0.1F;
-	private static float mutationRate = 0.5F;
+	private static float crossoverRate = 1.0F;
+	private static float mutationRate = 0.1F;
 	private static float elitismRate = 0.09F;
 	
 	private static TravelingSalesmanProblem tsp;
@@ -47,19 +47,26 @@ public class RunMe {
 	 */
 	private static void consoleOutput(){
 		System.out.println("I found a solution for the Traveling Salesman Problem: ");
-//		System.out.println("Parameters: ");
-//		System.out.println("Seed: " + seed);
-//		System.out.println("Population Size: " + popSize);
-//		System.out.println("Generation Span: " + genSize);
-//		System.out.println("Crossover Rate: " + crossoverRate);
-//		System.out.println("Mutation Rate: " + mutationRate);
-//		System.out.println("Elitism Rate: " + elitismRate);
+		System.out.println("Parameters: ");
+		System.out.println("Seed: " + seed);
+		System.out.println("Population Size: " + popSize);
+		System.out.println("Generation Span: " + genSize);
+		System.out.println("Crossover Rate: " + crossoverRate);
+		System.out.println("Mutation Rate: " + mutationRate);
+		System.out.println("Elitism Rate: " + elitismRate);
 	}
 
+	/**
+	 * Prints the transfered String in the current file
+	 * @param word
+	 */
 	public static void printInFile(String word) {
 		writer.println(word);
 	}
 	
+	/**
+	 * Solves the TspBerlin
+	 */
 	public static void solve(){
 
 		tsp = new TspBerlin(popSize, genSize, crossoverRate, mutationRate, 
@@ -77,6 +84,10 @@ public class RunMe {
 		
 	}
 	
+	/**
+	 * Creates a new PrintWriter with a customized name for the file
+	 * @param num
+	 */
 	public static void newWriter(int num){
 		String fileName = "tsp";
 		fileName += num;
@@ -85,7 +96,6 @@ public class RunMe {
 		try {
 			writer = new PrintWriter(fileName, "UTF-8");
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
