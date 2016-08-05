@@ -1,5 +1,3 @@
-package geneticAlgorithms;
-
 /**
  * This class represents a Traveling-Salesman-Problem (tsp)
  * @author Maike Rees
@@ -45,7 +43,7 @@ public abstract class TravelingSalesmanProblem {
 		this.parentPop = new Population(popSize, this, crossoverRate, mutationRate, elitisimRate);
 		parentPop.initializeIndividualsRandomly(this);
 	}
-	
+
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
@@ -85,13 +83,14 @@ public abstract class TravelingSalesmanProblem {
 		solution = initializeSolution();
 	
 		int generationCounter = 0;
-		RunMe.printInFile("averageFitness" + "," + "bestFitness");
+		Runner.printInFile("averageFitness" + "," + "bestFitness");
+
 		
 		while (generationCounter < genSize + 1) {
 			String string = (int)parentPop.getAverageFitness() + "," + solution.getFitness();
-			RunMe.printInFile(string);
-//			RunMe.printInFile((int)parentPop.getAverageFitness());
-//			RunMe.printInFile(solution.getFitness());
+			Runner.printInFile(string);
+//			Runner.printInFile((int)parentPop.getAverageFitness());
+//			Runner.printInFile(solution.getFitness());
 			parentPop = parentPop.reproduce(this);
 			// save best child as solution
 			for (int i = 0; i < parentPop.getSize(); i++) {

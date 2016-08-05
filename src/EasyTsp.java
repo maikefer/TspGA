@@ -1,5 +1,3 @@
-package geneticAlgorithms;
-
 /**
  * A Tsp just for testing purposes
  * @author Maike

@@ -1,5 +1,3 @@
-package geneticAlgorithms;
-
 /**
  * A Tsp for testing purposes.
  * It uses real City - Data but only as much as you want it to.

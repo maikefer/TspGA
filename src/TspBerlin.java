@@ -1,5 +1,3 @@
-package geneticAlgorithms;
-
 /**
  * The precise tsp-data that will be used to find a solution
  * @author Maike

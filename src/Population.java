@@ -1,5 +1,3 @@
-package geneticAlgorithms;
-
 import java.util.TreeSet;
 
 /**
@@ -201,7 +199,7 @@ public class Population {
 		Individual tournament[] = new Individual[tournamentNumber];
 
 		for (int i = 0; i < tournamentNumber; i++) {
-			int k = RunMe.randomGenerator.nextInt(size);
+			int k = Runner.randomGenerator.nextInt(size);
 			tournament[i] = this.getIndividual(k);
 		}
 
@@ -224,7 +222,7 @@ public class Population {
 		int absolute = (int) (crossoverRate * 100);
 		
 		// Random number between 0 and 99
-		int k = RunMe.randomGenerator.nextInt(100);
+		int k = Runner.randomGenerator.nextInt(100);
 
 		if (k <= absolute) {
 			return true;
@@ -263,7 +261,7 @@ public class Population {
 		int absolute = (int) (mutationRate * 100);
 		
 		// Random number between 0 and 99
-		int k = RunMe.randomGenerator.nextInt(100);
+		int k = Runner.randomGenerator.nextInt(100);
 
 		if (k <= absolute) {
 			return true;
@@ -299,7 +297,7 @@ public class Population {
 		int mask[] = new int[citySize];
 
 		for (int i = 0; i < citySize; i++) {
-			double j = RunMe.randomGenerator.nextInt(100);
+			double j = Runner.randomGenerator.nextInt(100);
 			if (j < 50) {
 				mask[i] = 0;
 			} else {
@@ -344,11 +342,11 @@ public class Population {
 //	
 //		int array[] = new int[2];
 //	
-//		array[0] = RunMe.randomGenerator.nextInt(dimension);
-//		array[1] = RunMe.randomGenerator.nextInt(dimension);
+//		array[0] = Runner.randomGenerator.nextInt(dimension);
+//		array[1] = Runner.randomGenerator.nextInt(dimension);
 //		
 //		while (array[0] ==  array[1]) {
-//			array[1] = RunMe.randomGenerator.nextInt(dimension);
+//			array[1] = Runner.randomGenerator.nextInt(dimension);
 //		}
 //		
 //		if (array[0] > array[1]) {

@@ -1,5 +1,3 @@
-package geneticAlgorithms;
-
 /**
  * This class represents an individual. An individual is a solution for the TravelingSalesmanProblem. 
  * <br/> <br/>
@@ -102,7 +100,7 @@ public class Individual implements Comparable<Individual> {
 			loop = true;
 
 			while (loop) {
-				city = RunMe.randomGenerator.nextInt(cities.length);
+				city = Runner.randomGenerator.nextInt(cities.length);
 //				city = Math.abs(generator.nextInt() % (cities.length));
 
 				// '\u0000' is the default value for chars --> char hasn't been 
@@ -122,11 +120,11 @@ public class Individual implements Comparable<Individual> {
 	public void mutateReciprocalExchange() {
 
 		// take two random numbers within the array, that are not the same
-		int k = RunMe.randomGenerator.nextInt(cities.length);
-		int j = RunMe.randomGenerator.nextInt(cities.length);
+		int k = Runner.randomGenerator.nextInt(cities.length);
+		int j = Runner.randomGenerator.nextInt(cities.length);
 		
 		while (j == k) {
-			j = RunMe.randomGenerator.nextInt(cities.length);
+			j = Runner.randomGenerator.nextInt(cities.length);
 		}
 		
 		// swap the cities located at the randomly generated positions
@@ -159,11 +157,11 @@ public class Individual implements Comparable<Individual> {
 		int dimension = cities.length;
 		int array[] = new int[2];
 	
-		array[0] = RunMe.randomGenerator.nextInt(dimension);
-		array[1] = RunMe.randomGenerator.nextInt(dimension);
+		array[0] = Runner.randomGenerator.nextInt(dimension);
+		array[1] = Runner.randomGenerator.nextInt(dimension);
 		
 		while (array[0] ==  array[1]) {
-			array[1] = RunMe.randomGenerator.nextInt(dimension);
+			array[1] = Runner.randomGenerator.nextInt(dimension);
 		}
 		
 		if (array[0] > array[1]) {
