@@ -20,11 +20,11 @@ public class TravelingSalesmanProblem {
     private Population parentPop;
     private int genSize;
 
-    TravelingSalesmanProblem(int amountCities, int popSize, int genSize, float crossoverRate,
-                             float mutationRate, float elitismRate, InitializationStrategy initializationStrategy) {
+    public TravelingSalesmanProblem(int amountCities, int popSize, int genSize, float crossoverRate,
+                                    float mutationRate, float elitismRate, InitializationStrategy initializationStrategy) {
 
         this.amountCities = amountCities;
-        this.kmOfCityLinks = initializationStrategy.initialize();
+        this.kmOfCityLinks = initializationStrategy.createCities();
         this.genSize = genSize;
         this.parentPop = new Population(popSize, this, crossoverRate, mutationRate, elitismRate);
     }

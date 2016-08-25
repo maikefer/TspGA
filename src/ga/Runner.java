@@ -1,8 +1,7 @@
 package ga;
 
-import ga.tsp.TspBerlin;
-import ga.tsp.initialization.RandomInitializationStrategy;
 import ga.tsp.TravelingSalesmanProblem;
+import ga.tsp.initialization.BerlinInitialization;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -40,8 +39,8 @@ public class Runner {
 		float crossoverRate = 1.0F;
 		float mutationRate = 0.1F;
 		float elitismRate = 0.09F;
-		TravelingSalesmanProblem tsp = new TspBerlin(52, popSize, genSize, crossoverRate, mutationRate, elitismRate,
-                new RandomInitializationStrategy());
+		TravelingSalesmanProblem tsp = new TravelingSalesmanProblem(52, popSize, genSize, crossoverRate, mutationRate,
+				elitismRate, new BerlinInitialization());
 		
 		long time = System.currentTimeMillis();
 		Individual bestIndividual = tsp.findBestIndividual();
