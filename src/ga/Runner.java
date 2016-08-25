@@ -1,19 +1,18 @@
+package ga;
+
+import ga.tsp.TspBerlin;
+import ga.tsp.initialization.RandomInitializationStrategy;
+import ga.tsp.TravelingSalesmanProblem;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
-/**
- * This is the runnable class who starts the tsp-solution-finding process.
- * @author Maike Rees, November 2015
- *
- *TODO check for not valid parameters
- */
 public class Runner {
 	
 	private static final int seed = 500;
 	static final Random randomGenerator = new Random(seed);
-
 	private static PrintWriter writer;
 
 	public static void main(String[] args) {
@@ -30,7 +29,7 @@ public class Runner {
 		}
 	}
 
-	static void printInFile(String word) {
+	public static void printInFile(String word) {
 		writer.println(word);
 	}
 
@@ -41,11 +40,11 @@ public class Runner {
 		float crossoverRate = 1.0F;
 		float mutationRate = 0.1F;
 		float elitismRate = 0.09F;
-		TravelingSalesmanProblem tsp = new TspBerlin(popSize, genSize, crossoverRate, mutationRate,
-				elitismRate);
+		TravelingSalesmanProblem tsp = new TspBerlin(52, popSize, genSize, crossoverRate, mutationRate, elitismRate,
+                new RandomInitializationStrategy());
 		
 		long time = System.currentTimeMillis();
-		tsp.findSolution();
+		Individual bestIndividual = tsp.findBestIndividual();
 		time = System.currentTimeMillis() - time;
 
 		System.out.println("I found a solution for the Traveling Salesman Problem: ");
@@ -58,9 +57,8 @@ public class Runner {
 		System.out.println("Elitism Rate: " + elitismRate);
 
 		System.out.println("It took " + time + " milliseconds");
-		System.out.println("The fitness is: " + tsp.solution.getFitness());
-		System.out.println("And the solution is: " + tsp.solution.toString());
-		
+		System.out.println("The fitness is: " + bestIndividual.getFitness());
+		System.out.println("And the solution is: " + bestIndividual.toString());
 	}
 	
 	private static PrintWriter newWriter(int num){

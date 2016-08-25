@@ -1,3 +1,7 @@
+package ga;
+
+import ga.tsp.TravelingSalesmanProblem;
+
 /**
  * This class represents an individual. An individual is a solution for the TravelingSalesmanProblem. 
  * <br/> <br/>
@@ -24,7 +28,7 @@ public class Individual implements Comparable<Individual> {
 	 * @param tsp The specific tsp for which this Individual represents a solution
 	 */
 	public Individual(TravelingSalesmanProblem tsp) {
-		this.cities = new int[tsp.getDimension()];
+		this.cities = new int[tsp.getAmountCities()];
 		this.tsp = tsp;
 		this.initializeRandomly();
 	}
@@ -149,7 +153,6 @@ public class Individual implements Comparable<Individual> {
 
 	/**
 	 * Calculates two random points within the length of the cities array.
-	 * @param dimension 
 	 * @return an array with two points whereas the first point is always smaller than the second
 	 */
 	public int[] getTwoPoints(){
