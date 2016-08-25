@@ -350,6 +350,10 @@ public class Individual implements Comparable<Individual> {
 			return 1;
 		}
 	}
+
+	public int getCitySize() {
+		return cities.length;
+	}
 }
 
 

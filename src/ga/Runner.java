@@ -1,5 +1,6 @@
 package ga;
 
+import ga.crossover.PMX;
 import ga.tsp.TravelingSalesmanProblem;
 import ga.tsp.initialization.BerlinInitialization;
 
@@ -40,7 +41,7 @@ public class Runner {
 		float mutationRate = 0.1F;
 		float elitismRate = 0.09F;
 		TravelingSalesmanProblem tsp = new TravelingSalesmanProblem(popSize, genSize, crossoverRate, mutationRate,
-				elitismRate, new BerlinInitialization());
+				elitismRate, new BerlinInitialization(), new PMX());
 		
 		long time = System.currentTimeMillis();
 		Individual bestIndividual = tsp.findBestIndividual();

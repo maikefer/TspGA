@@ -3,6 +3,7 @@ package ga.tsp;
 import ga.Individual;
 import ga.Population;
 import ga.Runner;
+import ga.crossover.CrossoverStrategy;
 import ga.crossover.PMX;
 import ga.tsp.initialization.InitializationStrategy;
 
@@ -12,16 +13,18 @@ public class TravelingSalesmanProblem {
      * The coordinates of the cities.
      */
     private int kmOfCityLinks[][];
-
     private Population parentPop;
     private int genSize;
+    private CrossoverStrategy crossoverStrategy;
 
     public TravelingSalesmanProblem(int popSize, int genSize, float crossoverRate, float mutationRate,
-                                    float elitismRate, InitializationStrategy initializationStrategy) {
+                                    float elitismRate, InitializationStrategy initializationStrategy,
+                                    CrossoverStrategy crossoverStrategy) {
 
         this.kmOfCityLinks = initializationStrategy.createCities();
         this.genSize = genSize;
         this.parentPop = new Population(popSize, this, crossoverRate, mutationRate, elitismRate);
+        this.crossoverStrategy = crossoverStrategy;
     }
 
     /**
@@ -54,7 +57,7 @@ public class TravelingSalesmanProblem {
 //			Runner.printInFile((int)parentPop.getAverageFitness());
 //			Runner.printInFile(solution.getFitness());
 
-            parentPop = parentPop.reproduce(new PMX());
+            parentPop = parentPop.reproduce(crossoverStrategy);
             // save best child as solution
             for (int i = 0; i < parentPop.getAmountOfIndividuals(); i++) {
                 if (parentPop.getIndividual(i).getFitness() < bestIndividual.getFitness()) {
