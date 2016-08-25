@@ -88,7 +88,6 @@ public class Population {
         // insert elite individuals into new childPopulation
         elite.forEach(childrenPop::add);
 
-        // todo mutation, crossover rate
 
         while (!childrenPop.isFull()) {
 
@@ -162,7 +161,7 @@ public class Population {
 //            // UOX:
 ////			int mask[] = getRandomMask();
 //            // PMX:
-//            int pointsForPmx[] = parent1.getTwoPoints();
+//            int pointsForPmx[] = parent1.getTwoRandomPoints();
 //
 //            // think of crossover rate
 //            if (crossoverOk()) {
@@ -326,6 +325,7 @@ public class Population {
 
         private PopulationBuilder(int size) {
             this.size = size;
+            this.individuals = new ArrayList<>();
         }
 
         private void add(Individual individual) {

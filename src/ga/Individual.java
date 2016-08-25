@@ -138,7 +138,7 @@ public class Individual implements Comparable<Individual> {
 	}
 	
 	public void mutateBetter() {
-		int twoPoints[] = getTwoPoints();
+		int twoPoints[] = getTwoRandomPoints();
 		int temp;
 		
 		while (twoPoints[0] < twoPoints[1]) {
@@ -155,7 +155,7 @@ public class Individual implements Comparable<Individual> {
 	 * Calculates two random points within the length of the cities array.
 	 * @return an array with two points whereas the first point is always smaller than the second
 	 */
-	public int[] getTwoPoints(){
+	public int[] getTwoRandomPoints(){
 	
 		int dimension = cities.length;
 		int array[] = new int[2];

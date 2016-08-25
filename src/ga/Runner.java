@@ -39,7 +39,7 @@ public class Runner {
 		float crossoverRate = 1.0F;
 		float mutationRate = 0.1F;
 		float elitismRate = 0.09F;
-		TravelingSalesmanProblem tsp = new TravelingSalesmanProblem(52, popSize, genSize, crossoverRate, mutationRate,
+		TravelingSalesmanProblem tsp = new TravelingSalesmanProblem(popSize, genSize, crossoverRate, mutationRate,
 				elitismRate, new BerlinInitialization());
 		
 		long time = System.currentTimeMillis();

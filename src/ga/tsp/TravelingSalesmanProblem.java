@@ -13,17 +13,12 @@ public class TravelingSalesmanProblem {
      */
     private int kmOfCityLinks[][];
 
-    /**
-     * The amount of cities accused by the tsp.
-     */
-    private int amountCities;
     private Population parentPop;
     private int genSize;
 
-    public TravelingSalesmanProblem(int amountCities, int popSize, int genSize, float crossoverRate,
-                                    float mutationRate, float elitismRate, InitializationStrategy initializationStrategy) {
+    public TravelingSalesmanProblem(int popSize, int genSize, float crossoverRate, float mutationRate,
+                                    float elitismRate, InitializationStrategy initializationStrategy) {
 
-        this.amountCities = amountCities;
         this.kmOfCityLinks = initializationStrategy.createCities();
         this.genSize = genSize;
         this.parentPop = new Population(popSize, this, crossoverRate, mutationRate, elitismRate);
@@ -74,16 +69,15 @@ public class TravelingSalesmanProblem {
         return bestIndividual;
     }
 
-    /**
-     * @return the amountCities (amount of cities) of the tsp
-     */
     public int getAmountCities() {
-        return amountCities;
+        return kmOfCityLinks.length;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        int amountCities = kmOfCityLinks.length;
+
         sb.append("Dimension: ").append(amountCities);
         sb.append("\nPopulationSize: ").append(parentPop.getAmountOfIndividuals());
         sb.append("\nNodes:");
