@@ -29,7 +29,7 @@ public class Runner {
 	}
 
 	public static void printInFile(String word) {
-		writer.println(word);
+//		writer.println(word);
 	}
 
 	private static void solveTspBerlin(){

@@ -61,9 +61,9 @@ public class TravelingSalesmanProblem {
                     bestIndividual = parentPop.getIndividual(i);
                 }
             }
-            System.out.println("Generation Counter: " + generationCounter
-                    + " best Fitness: " + bestIndividual.getFitness()
-                    + " average Fitness: " + parentPop.getAverageFitness());
+//            System.out.println("Generation Counter: " + generationCounter
+//                    + " best Fitness: " + bestIndividual.getFitness()
+//                    + " average Fitness: " + parentPop.getAverageFitness());
             generationCounter++;
         }
         return bestIndividual;
