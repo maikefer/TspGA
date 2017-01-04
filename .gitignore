@@ -16,3 +16,6 @@ hs_err_pid*
 *.classpath
 
 output/
+
+idea/workspace.xml
+idea/tasks.xml
