@@ -17,5 +17,5 @@ hs_err_pid*
 
 output/
 
-idea/workspace.xml
-idea/tasks.xml
+.idea/workspace.xml
+.idea/tasks.xml
