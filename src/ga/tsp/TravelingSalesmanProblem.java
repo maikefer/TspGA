@@ -4,7 +4,6 @@ import ga.Individual;
 import ga.Population;
 import ga.Runner;
 import ga.crossover.CrossoverStrategy;
-import ga.crossover.PMX;
 import ga.tsp.initialization.InitializationStrategy;
 
 public class TravelingSalesmanProblem {
@@ -12,10 +11,10 @@ public class TravelingSalesmanProblem {
     /**
      * The coordinates of the cities.
      */
-    private int kmOfCityLinks[][];
+    private final int kmOfCityLinks[][];
     private Population parentPop;
-    private int genSize;
-    private CrossoverStrategy crossoverStrategy;
+    private final int genSize;
+    private final CrossoverStrategy crossoverStrategy;
 
     public TravelingSalesmanProblem(int popSize, int genSize, float crossoverRate, float mutationRate,
                                     float elitismRate, InitializationStrategy initializationStrategy,

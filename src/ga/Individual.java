@@ -15,12 +15,9 @@ public class Individual implements Comparable<Individual> {
 	/**
 	 * The representation of the order of the cities
 	 */
-	private int[] cities;
+	private final int[] cities;
 
-	/**
-	 * The specific TravelingSalesmanProblem
-	 */
-	private TravelingSalesmanProblem tsp;
+	private final TravelingSalesmanProblem tsp;
 
 	/**
 	 * The Constructor <br/>
@@ -95,8 +92,8 @@ public class Individual implements Comparable<Individual> {
 	 * Initialize the city-representation with a random order. <br/> 
 	 * But every city is only once represented.
 	 */
-	public void initializeRandomly() {
-		int city = 0;
+	private void initializeRandomly() {
+		int city;
 //		Random generator = new Random();
 		boolean loop;
 
@@ -179,21 +176,13 @@ public class Individual implements Comparable<Individual> {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		
-		for (int i = 0; i < cities.length; i++){
-			sb.append(cities[i] + " ");
-		}
-		
-//		sb.append("\nlenght: " + cities.length );
-		
-		return sb.toString();
 
+		for (int city : cities) {
+			sb.append(city).append(" ");
+		}
+		return sb.toString();
 	}
 
-	/**
-	 * checks if every number occurs only once in the array
-	 * @return
-	 */
 	public boolean isValid(){
 		boolean alreadyIn[] = new boolean[cities.length];
 		
@@ -243,13 +232,7 @@ public class Individual implements Comparable<Individual> {
 		
 		return children;
 	}
-	
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @param parent2
-	 */
+
 	public Individual getChildPMX(int x, int y, Individual parent2){
 		
 		Individual child = new Individual(tsp);
@@ -259,9 +242,7 @@ public class Individual implements Comparable<Individual> {
 //		int line2[] = new int[y - x];
 		
 		// copy randomly decided cities from parent 2 into child
-		for (int i = x; i <= y; i++) {
-			child.cities[i] = parent2.cities[i];
-		}
+        System.arraycopy(parent2.cities, x, child.cities, x, y + 1 - x);
 		
 	
 		for (int i = 0; i < child.cities.length; i++){
@@ -312,8 +293,8 @@ public class Individual implements Comparable<Individual> {
 	 * @return if the city represented by n is already contained in the Individual's city representation
 	 */
 	private boolean contains(int n){
-		for (int i = 0; i < cities.length; i++) {
-			if (cities[i] == n) {
+		for (int city : cities) {
+			if (city == n) {
 				return true;
 			}
 		}

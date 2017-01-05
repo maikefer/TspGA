@@ -1,8 +1,6 @@
 package ga.crossover;
 
 import ga.Individual;
-import ga.Runner;
-import ga.crossover.CrossoverStrategy;
 import javafx.util.Pair;
 
 import java.util.Random;
@@ -10,7 +8,7 @@ import java.util.Random;
 
 public class UOX implements CrossoverStrategy {
 
-    private Random  random = new Random(100);
+    private final Random random = new Random(100);
 
     @Override
     public Pair<Individual, Individual> doCrossover(Individual parent1, Individual parent2) {

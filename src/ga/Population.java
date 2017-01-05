@@ -321,7 +321,7 @@ public class Population {
     private class PopulationBuilder {
 
         private final int size;
-        private List<Individual> individuals;
+        private final List<Individual> individuals;
 
         private PopulationBuilder(int size) {
             this.size = size;
