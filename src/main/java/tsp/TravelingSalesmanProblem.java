@@ -1,8 +1,8 @@
 package tsp;
 
+import ga.Runner;
 import ga.Individual;
 import ga.Population;
-import ga.Runner;
 import ga.crossover.CrossoverStrategy;
 
 import tsp.initialization.InitializationStrategy;

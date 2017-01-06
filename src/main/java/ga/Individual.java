@@ -5,7 +5,7 @@ import tsp.TravelingSalesmanProblem;
 /**
  * This class represents an individual. An individual is a solution for the TravelingSalesmanProblem. 
  * <br/> <br/>
- * An individual contains a representation of the order of cities, as well as the specific tsp that 
+ * An individual contains a representation of the order of cities, as well as the specific java.java.tsp that
  * it provides a solution for. 
  * @author Maike Rees
  *
@@ -22,7 +22,7 @@ public class Individual implements Comparable<Individual> {
 	/**
 	 * The Constructor <br/>
 	 * The representation of the cities will be initialized randomly. 
-	 * @param tsp The specific tsp for which this Individual represents a solution
+	 * @param tsp The specific java.java.tsp for which this Individual represents a solution
 	 */
 	public Individual(TravelingSalesmanProblem tsp) {
 		this.cities = new int[tsp.getAmountCities()];
@@ -42,11 +42,11 @@ public class Individual implements Comparable<Individual> {
 //		int fitness = 0;
 //		
 //		for (int i = 0; i < cities.length - 1; i++){
-//			fitness += calculateDistance(tsp.getX(cities[i]), tsp.getX(cities[i + 1]), tsp.getY(cities[i]), tsp.getY(cities[i + 1]));
+//			fitness += calculateDistance(java.java.tsp.getX(cities[i]), java.java.tsp.getX(cities[i + 1]), java.java.tsp.getY(cities[i]), java.java.tsp.getY(cities[i + 1]));
 //		}
 //		
-//		fitness += calculateDistance(tsp.getX(cities.length - 1), tsp.getX(0), 
-//						tsp.getY(cities.length - 1), tsp.getY(0));
+//		fitness += calculateDistance(java.java.tsp.getX(cities.length - 1), java.java.tsp.getX(0),
+//						java.java.tsp.getY(cities.length - 1), java.java.tsp.getY(0));
 //
 //		return fitness;
 //	}

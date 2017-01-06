@@ -1,7 +1,8 @@
 package ga.crossover;
 
-import ga.Individual;
 import javafx.util.Pair;
+
+import ga.Individual;
 
 public interface CrossoverStrategy {
 

@@ -1,9 +1,11 @@
 package tsp;
 
+import org.junit.Test;
+
 import ga.Individual;
 import ga.crossover.PMX;
 import ga.crossover.UOX;
-import org.junit.Test;
+import tsp.TravelingSalesmanProblem;
 import tsp.initialization.BerlinInitialization;
 
 import static org.junit.Assert.*;
