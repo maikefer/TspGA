@@ -1,6 +1,6 @@
 package ga;
 
-import ga.tsp.TravelingSalesmanProblem;
+import tsp.TravelingSalesmanProblem;
 
 /**
  * This class represents an individual. An individual is a solution for the TravelingSalesmanProblem. 
@@ -311,25 +311,8 @@ public class Individual implements Comparable<Individual> {
 	}
 
 	@Override
-	public int compareTo(Individual arg0) {
-		/*
-		 * returns:
-		 * neg int - arg0 < arg1
-		 * 0 - arg0 = arg1
-		 * pos int - arg0 > arg1
-		 */
-	
-		
-		int fitness0 = this.getFitness();
-		int fitness1 = arg0.getFitness();
-		
-		if (fitness0 < fitness1){
-			return -1;
-		} else if (fitness0 == fitness1) {
-			return 0;
-		} else {
-			return 1;
-		}
+	public int compareTo(Individual otherIndividual) {
+        return (this.getFitness() - otherIndividual.getFitness());
 	}
 
 	public int getCitySize() {

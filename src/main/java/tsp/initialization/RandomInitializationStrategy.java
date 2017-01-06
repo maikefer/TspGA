@@ -1,4 +1,4 @@
-package ga.tsp.initialization;
+package tsp.initialization;
 
 public class RandomInitializationStrategy implements InitializationStrategy {
 

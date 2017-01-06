@@ -1,10 +1,11 @@
-package ga.tsp;
+package tsp;
 
 import ga.Individual;
 import ga.Population;
 import ga.Runner;
 import ga.crossover.CrossoverStrategy;
-import ga.tsp.initialization.InitializationStrategy;
+
+import tsp.initialization.InitializationStrategy;
 
 public class TravelingSalesmanProblem {
 

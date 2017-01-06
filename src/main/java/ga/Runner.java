@@ -1,8 +1,8 @@
 package ga;
 
 import ga.crossover.PMX;
-import ga.tsp.TravelingSalesmanProblem;
-import ga.tsp.initialization.BerlinInitialization;
+import tsp.TravelingSalesmanProblem;
+import tsp.initialization.BerlinInitialization;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;

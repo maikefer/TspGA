@@ -1,15 +1,14 @@
-package ga.tsp;
+package tsp;
 
 import ga.Individual;
 import ga.crossover.PMX;
 import ga.crossover.UOX;
-import ga.tsp.initialization.BerlinInitialization;
 import org.junit.Test;
+import tsp.initialization.BerlinInitialization;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TravelingSalesmanProblemTest {
-
 
     @Test
     public void testTSPWithBerlinDataAndPMX() {

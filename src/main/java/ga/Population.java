@@ -1,7 +1,8 @@
 package ga;
 
 import ga.crossover.CrossoverStrategy;
-import ga.tsp.TravelingSalesmanProblem;
+
+import tsp.TravelingSalesmanProblem;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
