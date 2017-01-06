@@ -32,6 +32,7 @@ public class GeneticAlgorithmTest {
         assertTrue(time < 5000);
 
         int fitness = bestIndividual.getFitness();
+        System.out.println(fitness);
         assertTrue(fitness < 10000);
     }
 
