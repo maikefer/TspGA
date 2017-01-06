@@ -1,9 +1,12 @@
 package ga;
 
-import tsp.TravelingSalesmanProblem;
+import util.City;
+
+import java.util.List;
+import java.util.Random;
 
 /**
- * This class represents an individual. An individual is a solution for the TravelingSalesmanProblem. 
+ * This class represents an individual. An individual is a solution for the GeneticAlgorithm.
  * <br/> <br/>
  * An individual contains a representation of the order of cities, as well as the specific java.java.tsp that
  * it provides a solution for. 
@@ -16,40 +19,18 @@ public class Individual implements Comparable<Individual> {
 	 * The representation of the order of the cities
 	 */
 	private final int[] cities;
-
-	private final TravelingSalesmanProblem tsp;
+	private final List<City> cityCoordinates;
 
 	/**
 	 * The Constructor <br/>
 	 * The representation of the cities will be initialized randomly. 
-	 * @param tsp The specific java.java.tsp for which this Individual represents a solution
+	 * @param randomGenerator
 	 */
-	public Individual(TravelingSalesmanProblem tsp) {
-		this.cities = new int[tsp.getAmountCities()];
-		this.tsp = tsp;
-		this.initializeRandomly();
+	Individual(Random randomGenerator, List<City> cityCoordinates) {
+		this.cities = new int[cityCoordinates.size()];
+		this.initializeRandomly(randomGenerator);
+		this.cityCoordinates = cityCoordinates;
 	}
-
-	/**
-	 * The Fitness is the total (fast) distance traveled in this individual. We assume
-	 * that every city is only one time inside the cities array
-	 * 
-	 * @return the fitness value (the smaller the better)
-	 */
-//	public int getFitness() {
-		
-//		return (int)getRealFitness();
-//		int fitness = 0;
-//		
-//		for (int i = 0; i < cities.length - 1; i++){
-//			fitness += calculateDistance(java.java.tsp.getX(cities[i]), java.java.tsp.getX(cities[i + 1]), java.java.tsp.getY(cities[i]), java.java.tsp.getY(cities[i + 1]));
-//		}
-//		
-//		fitness += calculateDistance(java.java.tsp.getX(cities.length - 1), java.java.tsp.getX(0),
-//						java.java.tsp.getY(cities.length - 1), java.java.tsp.getY(0));
-//
-//		return fitness;
-//	}
 	
 	/**
 	 * The Fitness is the total (slow) distance traveled in this individual. We assume
@@ -61,12 +42,19 @@ public class Individual implements Comparable<Individual> {
 		double fitness = 0;
 		
 		for (int i = 0; i < cities.length - 1; i++){
-			fitness += Math.sqrt(calculateDistance(tsp.getX(cities[i]), tsp.getX(cities[i + 1]), 
-						tsp.getY(cities[i]), tsp.getY(cities[i + 1])));
+			fitness += Math.sqrt(calculateDistance(
+					cityCoordinates.get(cities[i]).getX(),
+					cityCoordinates.get(cities[i + 1]).getX(),
+					cityCoordinates.get(cities[i]).getY(),
+					cityCoordinates.get(cities[i + 1]).getY()));
 		}
 		
-		fitness += Math.sqrt(calculateDistance(tsp.getX(cities.length - 1), tsp.getX(0), 
-						tsp.getY(cities.length - 1), tsp.getY(0)));
+		fitness += Math.sqrt(calculateDistance(
+								cityCoordinates.get(cities.length - 1).getX(),
+								cityCoordinates.get(0).getX(),
+								cityCoordinates.get(cities.length - 1).getY(),
+								cityCoordinates.get(0).getY()));
+
 		return (int)fitness;
 	}
 
@@ -91,18 +79,17 @@ public class Individual implements Comparable<Individual> {
 	/**
 	 * Initialize the city-representation with a random order. <br/> 
 	 * But every city is only once represented.
+	 * @param randomGenerator
 	 */
-	private void initializeRandomly() {
+	private void initializeRandomly(Random randomGenerator) {
 		int city;
-//		Random generator = new Random();
 		boolean loop;
 
 		for (int i = 0; i < cities.length; i++) {
 			loop = true;
 
 			while (loop) {
-				city = Runner.randomGenerator.nextInt(cities.length);
-//				city = Math.abs(generator.nextInt() % (cities.length));
+				city = randomGenerator.nextInt(cities.length);
 
 				// '\u0000' is the default value for chars --> char hasn't been 
 				// initialized
@@ -116,16 +103,17 @@ public class Individual implements Comparable<Individual> {
 
 	/**
 	 * This is a mutation method.
-	 * It swaps two numbers at random unique positions of the cities-array. 
+	 * It swaps two numbers at random unique positions of the cities-array.
+	 * @param randomGenerator
 	 */
-	public void mutateReciprocalExchange() {
+	public void mutateReciprocalExchange(Random randomGenerator) {
 
 		// take two random numbers within the array, that are not the same
-		int k = Runner.randomGenerator.nextInt(cities.length);
-		int j = Runner.randomGenerator.nextInt(cities.length);
+		int k = randomGenerator.nextInt(cities.length);
+		int j = randomGenerator.nextInt(cities.length);
 		
 		while (j == k) {
-			j = Runner.randomGenerator.nextInt(cities.length);
+			j = randomGenerator.nextInt(cities.length);
 		}
 		
 		// swap the cities located at the randomly generated positions
@@ -134,8 +122,8 @@ public class Individual implements Comparable<Individual> {
 		cities[j] = save;
 	}
 	
-	public void mutateBetter() {
-		int twoPoints[] = getTwoRandomPoints();
+	void mutateBetter(Random randomGenerator) {
+		int twoPoints[] = getTwoRandomPoints(randomGenerator);
 		int temp;
 		
 		while (twoPoints[0] < twoPoints[1]) {
@@ -151,17 +139,18 @@ public class Individual implements Comparable<Individual> {
 	/**
 	 * Calculates two random points within the length of the cities array.
 	 * @return an array with two points whereas the first point is always smaller than the second
+	 * @param randomGenerator
 	 */
-	public int[] getTwoRandomPoints(){
+	public int[] getTwoRandomPoints(Random randomGenerator){
 	
 		int dimension = cities.length;
 		int array[] = new int[2];
 	
-		array[0] = Runner.randomGenerator.nextInt(dimension);
-		array[1] = Runner.randomGenerator.nextInt(dimension);
+		array[0] = randomGenerator.nextInt(dimension);
+		array[1] = randomGenerator.nextInt(dimension);
 		
 		while (array[0] ==  array[1]) {
-			array[1] = Runner.randomGenerator.nextInt(dimension);
+			array[1] = randomGenerator.nextInt(dimension);
 		}
 		
 		if (array[0] > array[1]) {
@@ -203,10 +192,11 @@ public class Individual implements Comparable<Individual> {
 	 * 
 	 * @param mask The generated Bit-mask.
 	 * @param parent The second parent.
+	 * @param randomGenerator
 	 * @return The generated Child-Individual.
 	 */
-	public Individual getChildUOX(int mask[], Individual parent){
-		Individual children = new Individual(tsp); // will get randomly initialized, but doesn't matter
+	public Individual getChildUOX(int mask[], Individual parent, Random randomGenerator){
+		Individual children = new Individual(randomGenerator, this.cityCoordinates); // will get randomly initialized, but doesn't matter
 		children.initializeWithMinus1();
 		
 		for (int i = 0; i < cities.length; i++) {
@@ -233,9 +223,9 @@ public class Individual implements Comparable<Individual> {
 		return children;
 	}
 
-	public Individual getChildPMX(int x, int y, Individual parent2){
+	public Individual getChildPMX(int x, int y, Individual parent2, Random randomGenerator){
 		
-		Individual child = new Individual(tsp);
+		Individual child = new Individual(randomGenerator, this.cityCoordinates);
 		child.initializeWithMinus1();
 		
 //		int line1[] = new int[y - x];  (can use parents?)

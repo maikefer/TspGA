@@ -11,12 +11,12 @@ public class UOX implements CrossoverStrategy {
     private final Random random = new Random(100);
 
     @Override
-    public Pair<Individual, Individual> doCrossover(Individual parent1, Individual parent2) {
+    public Pair<Individual, Individual> doCrossover(Individual parent1, Individual parent2, Random random) {
 
         int[] mask = getRandomMask(parent1);
 
-        Individual child1 = parent1.getChildUOX(mask, parent2);
-        Individual child2 = parent2.getChildUOX(mask, parent1);
+        Individual child1 = parent1.getChildUOX(mask, parent2, random);
+        Individual child2 = parent2.getChildUOX(mask, parent1, random);
 
         return new Pair<>(child1, child2);
     }
