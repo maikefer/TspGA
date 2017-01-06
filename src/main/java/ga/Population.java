@@ -1,48 +1,48 @@
 package ga;
 
 import ga.crossover.CrossoverStrategy;
-
+import ga.selection.SelectionStrategy;
 import javafx.util.Pair;
 import util.City;
+import util.Percent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-/**
- * This class represents a population with a certain amount of individuals.
- */
 public class Population {
 
     private List<Individual> individuals;
     private final int citySize;
 
     /**
-     * The crossoverRate describes how many of the Individuals in the population are allowed to reproduce.
-     * It should be between 0.0 and 1.0 since it represents a %-number.
+     * Describes how many of the Individuals in the population are allowed to reproduce.
      */
-    private final float crossoverRate;
+    private final Percent crossoverRate;
 
     /**
-     * The mutationRate describes how many of the Individuals in the population are allowed to mutate.
-     * It should be between 0.0 and 1.0 since it represents a %-number.
+     * Describes how many of the Individuals in the population are allowed to mutate.
      */
-    private final float mutationRate;
+    private final Percent mutationRate;
 
     /**
-     * The elitismRate describes how many Elite-Individuals are chosen from the population
+     * Describes how many Elite-Individuals are chosen from the population
      * and put (without crossover and mutation) into the next generation.
      */
-    private final float elitismRate;
+    private final Percent elitismRate;
 
-    public Population(int size, float crossoverRate, float mutationRate,
-                      float elitismRate, List<City> cities, Random randomGenerator) {
+    public Population(int size, Percent crossoverRate, Percent mutationRate,
+                      Percent elitismRate, List<City> cities, Random randomGenerator) {
 
-        this(randomIndividuals(size, randomGenerator, cities), crossoverRate, mutationRate, elitismRate, cities.size());
+        this(generateRandomIndividuals(size, randomGenerator, cities), crossoverRate, mutationRate, elitismRate, cities.size());
     }
 
-    private Population(List<Individual> individuals, float crossoverRate,
-                       float mutationRate, float elitismRate, int amountCities) {
+    private Population(List<Individual> individuals, Percent crossoverRate,
+                       Percent mutationRate, Percent elitismRate, int amountCities) {
 
         this.citySize = amountCities;
         this.individuals = new ArrayList<>();
@@ -52,111 +52,72 @@ public class Population {
         this.individuals = individuals;
     }
 
-    private static List<Individual> randomIndividuals(int size, Random randomGenerator, List<City> cities) {
-        return IntStream.range(0, size).mapToObj(i -> new Individual(randomGenerator, cities)).collect(Collectors.toList());
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < individuals.size(); i++) {
-            sb.append("I").append(i).append(": ").append(individuals.get(i).toString()).append("\n");
-        }
-        return sb.toString();
+    private static List<Individual> generateRandomIndividuals(int size, Random randomGenerator, List<City> cities) {
+        return IntStream.range(0, size)
+                .mapToObj(i -> new Individual(randomGenerator, cities))
+                .collect(Collectors.toList());
     }
 
     /**
-     * Generate the offspring of the current population.
+     * Generates the offspring of the current population.
      */
-    public Population reproduce(CrossoverStrategy crossoverStrategy, Random randomGenerator, int amountCities) {
-        List<Individual> elite = this.grabElite();
+    public Population reproduce(SelectionStrategy selectionStrategy, CrossoverStrategy crossoverStrategy,
+                                Random randomGenerator, int amountCities) {
 
         PopulationBuilder childrenPop = new PopulationBuilder(individuals.size());
 
-        // insert elite individuals into new childPopulation
+        List<Individual> elite = this.grabElite();
         elite.forEach(childrenPop::add);
 
 
-        while (!childrenPop.isFull()) {
+        while (childrenPop.isNotFull()) {
 
-            Individual parent1 = this.selectTournament(randomGenerator);
-            Individual parent2 = this.selectTournament(randomGenerator);
+            Pair<Individual, Individual> parents = selectionStrategy.selectParents(individuals, randomGenerator);
+            Pair<Individual, Individual> children = crossoverStrategy.doCrossover(parents, randomGenerator);
+            Pair<Individual, Individual> nextGeneration = determineWhichIndividualsToAdd(parents, children, randomGenerator);
 
-            Pair<Individual, Individual> children = crossoverStrategy.doCrossover(parent1, parent2, randomGenerator);
+            childrenPop.add(nextGeneration.getKey());
 
-            Individual individualToAdd;
-
-            if (crossoverOk(randomGenerator)) {
-                individualToAdd = children.getKey();
-            } else {
-                individualToAdd = parent1;
-            }
-            if (mutationOk(randomGenerator)) {
-                individualToAdd.mutateBetter(randomGenerator);
-            }
-            childrenPop.add(individualToAdd);
-
-            if (!childrenPop.isFull()) {
-
-                if (crossoverOk(randomGenerator)) {
-                    individualToAdd = children.getValue();
-                } else {
-                    individualToAdd = parent2;
-                }
-                if (mutationOk(randomGenerator)) {
-                    individualToAdd.mutateBetter(randomGenerator);
-                }
-                childrenPop.add(individualToAdd);
+            if (childrenPop.isNotFull()) {
+                childrenPop.add(nextGeneration.getValue());
             }
         }
-
-        return childrenPop.makePopulation(this.crossoverRate, this.mutationRate, this.elitismRate, amountCities);
+        return childrenPop.buildPopulation(this.crossoverRate, this.mutationRate, this.elitismRate, amountCities);
     }
 
-    public int getAmountOfIndividuals() {
-        return individuals.size();
-    }
+    private Pair<Individual, Individual> determineWhichIndividualsToAdd(Pair<Individual, Individual> parents,
+                                                                        Pair<Individual, Individual> children,
+                                                                        Random randomGenerator) {
+        Individual firstWinner = parents.getKey();
 
-    public Individual getIndividual(int n) {
-        return individuals.get(n);
-    }
-
-    /**
-     * Tournament Selection:
-     * Selects a number of random individuals of the population and returns the
-     * individual with the best fitness.
-     *
-     * @return the individual with the best fitness
-     * @param randomGenerator
-     */
-    private Individual selectTournament(Random randomGenerator) {
-
-        int tournamentNumber = 5;
-        Individual tournament[] = new Individual[tournamentNumber];
-
-        for (int i = 0; i < tournamentNumber; i++) {
-            int k = randomGenerator.nextInt(individuals.size());
-            tournament[i] = this.getIndividual(k);
+        if (crossoverIsAllowed(randomGenerator)) {
+            firstWinner = children.getKey();
+        }
+        if (mutationIsAllowed(randomGenerator)) {
+            firstWinner.mutateBetter(randomGenerator); // todo
         }
 
-        Individual winner = tournament[0];
-        for (int i = 1; i < tournamentNumber; i++) {
-            if (tournament[i].getFitness() < winner.getFitness()) {
-                winner = tournament[i];
-            }
+        Individual secondWinner = parents.getValue();
+
+        if (crossoverIsAllowed(randomGenerator)) {
+            secondWinner = children.getValue();
         }
-        return winner;
+        if (mutationIsAllowed(randomGenerator)) {
+            secondWinner.mutateBetter(randomGenerator);
+        }
+
+        return new Pair<>(firstWinner, secondWinner);
     }
 
     /**
      * Checks, if the Individual is allowed to reproduce. <br/>
      * (Due to the crossoverRate)
      *
-     * @return If the Individual is allowed to reproduce
      * @param randomGenerator
+     * @return If the Individual is allowed to reproduce
      */
-    private boolean crossoverOk(Random randomGenerator) {
-        int absolute = (int) (crossoverRate * 100);
+    private boolean crossoverIsAllowed(Random randomGenerator) {
+        int absolute = (int) (crossoverRate.getPercentage() * 100);
         int k = randomGenerator.nextInt(100);
 
         return k <= absolute;
@@ -165,11 +126,11 @@ public class Population {
     /**
      * Checks if an Individual is allowed to mutate (due to the mutationRate).
      *
-     * @return If the individual is allowed to mutate.
      * @param randomGenerator
+     * @return If the individual is allowed to mutate.
      */
-    private boolean mutationOk(Random randomGenerator) {
-        int absolute = (int) (mutationRate * 100);
+    private boolean mutationIsAllowed(Random randomGenerator) {
+        int absolute = (int) (mutationRate.getPercentage() * 100);
         int k = randomGenerator.nextInt(100);
         return k <= absolute;
     }
@@ -177,9 +138,9 @@ public class Population {
     /**
      * Generates a random Bit-Mask with length = citySize
      *
+     * @param randomGenerator
      * @return generated Bit-Mask
      * TODO: better if boolean[], not int[] ?
-     * @param randomGenerator
      */
     private int[] getRandomMask(Random randomGenerator) {
         int mask[] = new int[citySize];
@@ -196,23 +157,20 @@ public class Population {
     }
 
     /**
-     * Grabs the elite (due to the elitismRate) of the current population.
+     * Grabs the elite of the current population.
      *
      * @return the elite individuals of the population
      */
     private List<Individual> grabElite() {
 
-        int amountOfIndividualsToBePicked = (int) elitismRate * individuals.size();
-
-        TreeSet<Individual> map = new TreeSet<>();
-        map.addAll(individuals);
-
-        List<Individual> elite = new ArrayList<>();
-
-        for (int i = 0; i < amountOfIndividualsToBePicked; i++) {
-            elite.add(map.pollFirst());
+        int amountEliteIndividuals = ((int) elitismRate.getPercentage() * 100) * individuals.size();
+        if (amountEliteIndividuals == 0) {
+            return new ArrayList<>();
         }
-        return elite;
+
+        TreeSet<Individual> sortedIndividuals = new TreeSet<>(individuals); // sort in ascending order
+
+        return sortedIndividuals.stream().limit(amountEliteIndividuals).collect(Collectors.toList());
     }
 
     public double getAverageFitness() {
@@ -222,7 +180,20 @@ public class Population {
 
     public Individual getFittestIndividual() {
         Optional<Individual> min = individuals.stream().min((x, y) -> x.getFitness() - y.getFitness());
-        return min.orElseThrow(() -> new IllegalArgumentException("No fittest chromosome found"));
+        return min.orElseThrow(() -> new IllegalArgumentException("No fittest individual found"));
+    }
+
+    public int getAmountOfIndividuals() {
+        return individuals.size();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        IntStream.range(0, individuals.size())
+                .forEach(i -> sb.append("I").append(i).append(": ")
+                        .append(individuals.get(i).toString()).append("\n"));
+        return sb.toString();
     }
 
     private class PopulationBuilder {
@@ -237,18 +208,20 @@ public class Population {
 
         private void add(Individual individual) {
             if (individuals.size() >= size) {
-                throw new IllegalStateException("Already enough Individuals");
+                throw new IllegalStateException(
+                        "The Population contains the maximum amount of Individuals. You can not add another individual!");
             }
             individuals.add(individual);
         }
 
-        private Population makePopulation(float crossoverRate, float mutationRate,
-                                          float elitismRate, int amountCities) {
+        private Population buildPopulation(Percent crossoverRate, Percent mutationRate,
+                                           Percent elitismRate, int amountCities) {
+
             return new Population(individuals, crossoverRate, mutationRate, elitismRate, amountCities);
         }
 
-        boolean isFull() {
-            return individuals.size() >= size;
+        boolean isNotFull() {
+            return individuals.size() < size;
         }
     }
 }

@@ -8,6 +8,6 @@ import java.util.Random;
 
 public interface CrossoverStrategy {
 
-    Pair<Individual, Individual> doCrossover(Individual parent1, Individual parent2, Random random);
+    Pair<Individual, Individual> doCrossover(Pair<Individual, Individual> parents, Random random);
 
 }

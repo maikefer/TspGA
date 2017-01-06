@@ -2,7 +2,9 @@ package ga;
 
 import ga.crossover.CrossoverStrategy;
 import ga.initialization.InitializationStrategy;
+import ga.selection.SelectionStrategy;
 import util.City;
+import util.Percent;
 
 import java.util.List;
 import java.util.Random;
@@ -15,10 +17,12 @@ class GeneticAlgorithm {
     private final int genSize;
     private final CrossoverStrategy crossoverStrategy;
     private final Random random;
+    private final SelectionStrategy selectionStrategy;
 
-    GeneticAlgorithm(Config config, InitializationStrategy initializationStrategy,
+    GeneticAlgorithm(Config config, InitializationStrategy initializationStrategy, SelectionStrategy selectionStrategy,
                      CrossoverStrategy crossoverStrategy) {
 
+        this.selectionStrategy = selectionStrategy;
         this.random = new Random(config.seed);
         this.cities = initializationStrategy.createCities();
         this.genSize = config.genSize;
@@ -30,7 +34,7 @@ class GeneticAlgorithm {
     Individual findBestIndividual() {
 
         for (int generationCounter = 0; generationCounter <= genSize; generationCounter++){
-            parentPop = parentPop.reproduce(crossoverStrategy, random, this.cities.size());
+            parentPop = parentPop.reproduce(selectionStrategy, crossoverStrategy, random, this.cities.size());
         }
 
         return parentPop.getFittestIndividual();
@@ -60,12 +64,12 @@ class GeneticAlgorithm {
     private static class Config {
         private final int popSize;
         private final int genSize;
-        private final float crossoverRate;
-        private final float mutationRate;
-        private final float elitismRate;
+        private final Percent crossoverRate;
+        private final Percent mutationRate;
+        private final Percent elitismRate;
         private final int seed;
 
-        Config(int popSize, int genSize, float crossoverRate, float mutationRate, float elitismRate, int seed) {
+        Config(int popSize, int genSize, Percent crossoverRate, Percent mutationRate, Percent elitismRate, int seed) {
             this.popSize = popSize;
             this.genSize = genSize;
             this.crossoverRate = crossoverRate;
@@ -79,9 +83,9 @@ class GeneticAlgorithm {
 
         private int popSize;
         private int genSize;
-        private float crossoverRate;
-        private float mutationRate;
-        private float elitismRate;
+        private Percent crossoverRate;
+        private Percent mutationRate;
+        private Percent elitismRate;
         private int seed;
 
         ConfigBuilder setPopSize(int popSize) {
@@ -94,17 +98,17 @@ class GeneticAlgorithm {
             return this;
         }
 
-        ConfigBuilder setCrossoverRate(float crossoverRate) {
+        ConfigBuilder setCrossoverRate(Percent crossoverRate) {
             this.crossoverRate = crossoverRate;
             return this;
         }
 
-        ConfigBuilder setMutationRate(float mutationRate) {
+        ConfigBuilder setMutationRate(Percent mutationRate) {
             this.mutationRate = mutationRate;
             return this;
         }
 
-        ConfigBuilder setElitismRate(float elitismRate) {
+        ConfigBuilder setElitismRate(Percent elitismRate) {
             this.elitismRate = elitismRate;
             return this;
         }
